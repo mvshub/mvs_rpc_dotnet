@@ -13,21 +13,28 @@ namespace test_rpc
         static void Main(string[] args)
         {
             RPC rpc = new RPC();
-            MethodInfo method = typeof(RPC).GetMethod(args[0]);
-            if(method != null)
+            if(args.Count() == 0)
             {
-                int count = method.GetParameters().Count();
-                List<String> paramesrs = new List<String>(args.ToList().Skip(1).Take(args.Count()-1));
-                for(int i = paramesrs.Count(); i < count;i++)         
-                    paramesrs.Add(null);
-                
-                var ret =  method.Invoke(rpc, paramesrs.Take(count).ToArray());
-
-                if(ret!= null)
+                Console.WriteLine(rpc.help());
+            }
+            else
+            {
+                MethodInfo method = typeof(RPC).GetMethod(args[0]);
+                if (method != null)
                 {
-                    String strResult = JsonExtension.ObjectToJson(ret);
-                    strResult.Replace("/n", "/r/n");
-                    Console.WriteLine(strResult);
+                    int count = method.GetParameters().Count();
+                    List<String> paramesrs = new List<String>(args.ToList().Skip(1).Take(args.Count() - 1));
+                    for (int i = paramesrs.Count(); i < count; i++)
+                        paramesrs.Add(null);
+
+                    var ret = method.Invoke(rpc, paramesrs.Take(count).ToArray());
+
+                    if (ret != null)
+                    {
+                        String strResult = JsonExtension.ObjectToJson(ret);
+                        strResult.Replace("/n", "/r/n");
+                        Console.WriteLine(strResult);
+                    }
                 }
             }
 

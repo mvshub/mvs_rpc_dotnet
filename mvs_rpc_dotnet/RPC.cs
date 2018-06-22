@@ -13,16 +13,19 @@ using System.Net.Http;
 using System.Net.WebSockets;
 namespace mvs_rpc
 {
-    //HttpClient a;
-    
+    public class RPCException : ApplicationException
+    {
+        public RPCException(String msg)
+            : base(msg)
+        {
+        }
+    }
+
     public partial class RPC
     {
-        public class RPCException : ApplicationException
+        public String help()
         {
-            public RPCException(String msg)
-                :base(msg)
-            {
-            }
+            return getResult<String>("help", null);
         }
 
         public T getResult<T>(String method, List<String> parameters)
@@ -32,7 +35,12 @@ namespace mvs_rpc
             {
                 rpc_res = postRequest(formatPostField(method, parameters));
                 if (rpc_res.CODE == 0)
-                    return JsonExtension.JsonToObject<T>(rpc_res.DATA);
+                {
+                    if (typeof(T).IsValueType || typeof(T) == typeof(String))
+                        return (T)Convert.ChangeType(rpc_res.DATA, typeof(T));
+                    else
+                        return JsonExtension.JsonToObject<T>(rpc_res.DATA);
+                }
                 else
                     throw new RPCException(rpc_res.DATA);
             }
