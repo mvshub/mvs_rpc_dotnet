@@ -27,24 +27,17 @@ namespace mvs_rpc
 
             String responseStr = "";
 
-            try
-            {
-                StreamWriter requestStream = new StreamWriter(request.GetRequestStream());
-                requestStream.Write(postdata);
-                requestStream.Close();
+            StreamWriter requestStream = new StreamWriter(request.GetRequestStream());
+            requestStream.Write(postdata);
+            requestStream.Close();
 
-                WebResponse response = request.GetResponse();
-                if (response != null)
-                {
-                    StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-                    responseStr = reader.ReadToEnd();
-                    reader.Close();
-                    return responseStr;
-                }
-            }
-            catch (Exception e)
+            WebResponse response = request.GetResponse();
+            if (response != null)
             {
-                responseStr = e.Message;
+                StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+                responseStr = reader.ReadToEnd();
+                reader.Close();
+                return responseStr;
             }
 
             return responseStr;

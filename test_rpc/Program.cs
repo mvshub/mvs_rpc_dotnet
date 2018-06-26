@@ -12,31 +12,73 @@ namespace test_rpc
     {
         static void Main(string[] args)
         {
-            RPC rpc = new RPC();
-            if(args.Count() == 0)
+            try
             {
-                Console.WriteLine(rpc.help());
-            }
-            else
-            {
-                MethodInfo method = typeof(RPC).GetMethod(args[0]);
-                if (method != null)
+                RPC rpc = new RPC();
+                rpc.URL = System.Configuration.ConfigurationSettings.AppSettings["host"];           
+                rpc.VERSION = (rpcversion)Enum.Parse(typeof(rpcversion), System.Configuration.ConfigurationManager.AppSettings["version"]);
+
+                Object ret = null;
+
+                if (args.Count() == 0 || args.ElementAt(0) == "help")
                 {
-                    int count = method.GetParameters().Count();
-                    List<String> paramesrs = new List<String>(args.ToList().Skip(1).Take(args.Count() - 1));
-                    for (int i = paramesrs.Count(); i < count; i++)
-                        paramesrs.Add(null);
+                    String method = null;
+                    if (args.Count() > 1)
+                        method = args.ElementAt(1);
 
-                    var ret = method.Invoke(rpc, paramesrs.Take(count).ToArray());
+                    ret = rpc.help(method);
+                }
 
-                    if (ret != null)
+                else
+                {
+                    MethodInfo method = typeof(RPC).GetMethod(args[0]);
+                    if (method != null)
                     {
-                        String strResult = JsonExtension.ObjectToJson(ret);
-                        strResult.Replace("/n", "/r/n");
-                        Console.WriteLine(strResult);
+                        int count = method.GetParameters().Count();
+                        List<Object> paramesrs = new List<Object>();
+                        int index = 1;
+                        foreach (var par in method.GetParameters())
+                        {
+                            if (index < args.Count())
+                            {
+                                var strPar = args.ElementAt(index++);
+                                if (strPar != "null")
+                                {
+                                    Type underlyingType = Nullable.GetUnderlyingType(par.ParameterType);
+                                    paramesrs.Add(Convert.ChangeType(strPar, underlyingType ?? par.ParameterType));
+                                    continue;
+                                }
+                            }
+
+                            paramesrs.Add(null);
+                        }
+
+                        ret = method.Invoke(rpc, paramesrs.Take(count).ToArray());
+
                     }
+                    else
+                        ret = rpc.test_rpc(args.ToList());
+
+                }
+
+                if (ret != null)
+                {
+                    String strResult = JsonExtension.ObjectToJson(ret);
+                    strResult = System.Text.RegularExpressions.Regex.Unescape(strResult);
+                    Console.WriteLine(strResult.ToString());
                 }
             }
+
+            catch (Exception e)
+            {
+                String strOut= e.Message;
+                if(e.InnerException != null)
+                {
+                    strOut = e.InnerException.Message;
+                }
+                Console.WriteLine(strOut);
+            }
+
 
         }
     }

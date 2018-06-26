@@ -10,6 +10,7 @@ namespace mvs_rpc
 {
     public partial class RPC
     {
+
         /*
             :param: ACCOUNTNAME(std::string): Account name required.
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
@@ -17,11 +18,12 @@ namespace mvs_rpc
             :param: DIDSYMBOL(std::string): "Did symbol"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction didchangeaddress(String ACCOUNTNAME, String ACCOUNTAUTH, String TOADDRESS, String DIDSYMBOL, UInt64 fee)
+        public String didchangeaddress(String ACCOUNTNAME, String ACCOUNTAUTH, String TOADDRESS, String DIDSYMBOL, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TOADDRESS, DIDSYMBOL };
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("didchangeaddress", parameters);
+
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("didchangeaddress", parameters);
         }
 
 
@@ -32,11 +34,11 @@ namespace mvs_rpc
             :param: selfpublickey(std::string): "The private key of this public key will be used to sign."
             :param: broadcast(bool): "Broadcast the tx if it is fullly signed, disabled by default."
         */
-        public String signmultisigtx(String ACCOUNTNAME, String ACCOUNTAUTH, String TRANSACTION, String selfpublickey, Boolean broadcast)
+        public String signmultisigtx(String ACCOUNTNAME, String ACCOUNTAUTH, String TRANSACTION, String selfpublickey = null, Boolean? broadcast = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TRANSACTION };
-            parameters.AddRange(new List<String> { "--selfpublickey", selfpublickey.ToString() });
-            parameters.AddRange(new List<String> { "--broadcast", broadcast.ToString() });
+            if (broadcast == true) parameters.Add("--broadcast");
+            if (selfpublickey != null) parameters.AddRange(new List<String> { "--selfpublickey", selfpublickey.ToString() });
             return getResult<String>("signmultisigtx", parameters);
         }
 
@@ -48,11 +50,12 @@ namespace mvs_rpc
             :param: SYMBOL(std::string): "The symbol of global unique MVS Digital Identity Destination/Index, supports alphabets/numbers/(“@”, “.”, “_”, “-“), case-sensitive, maximum length is 64."
             :param: fee(uint64_t): "The fee of tx. defaults to 1 etp."
         */
-        public transaction registerdid(String ACCOUNTNAME, String ACCOUNTAUTH, String ADDRESS, String SYMBOL, UInt64 fee)
+        public String registerdid(String ACCOUNTNAME, String ACCOUNTAUTH, String ADDRESS, String SYMBOL, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, ADDRESS, SYMBOL };
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("registerdid", parameters);
+
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("registerdid", parameters);
         }
 
 
@@ -71,12 +74,13 @@ namespace mvs_rpc
             defaults to disable.
             :param: fee(uint64_t): "The fee of tx. minimum is 10 etp."
         */
-        public transaction issue(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL, String model, UInt64 fee)
+        public String issue(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, SYMBOL };
-            parameters.AddRange(new List<String> { "--model", model.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("issue", parameters);
+
+            if (model != null) parameters.AddRange(new List<String> { "--model", model.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("issue", parameters);
         }
 
 
@@ -87,14 +91,14 @@ namespace mvs_rpc
             :param: password(std::string): Account password(authorization) required.
             :param: hd_index(std::uint32_t): "The HD index for the account."
         */
-        public accountEx importaccount(List<String> WORD, String language, String accountname, String password, UInt32 hd_index)
+        public String importaccount(String WORD, String accountname, String password, String language = null, UInt32? hd_index = null)
         {
-            List<String> parameters = new List<String>() { String.Join(" ", WORD.ToArray()) };
-            parameters.AddRange(new List<String> { "--language", language.ToString() });
-            parameters.AddRange(new List<String> { "--accountname", accountname.ToString() });
-            parameters.AddRange(new List<String> { "--password", password.ToString() });
-            parameters.AddRange(new List<String> { "--hd_index", hd_index.ToString() });
-            return getResult<accountEx>("importaccount", parameters);
+            List<String> parameters = new List<String>() { WORD, "--accountname", accountname.ToString(), "--password", password.ToString() };
+
+            if (language != null) parameters.AddRange(new List<String> { "--language", language.ToString() });
+            if (hd_index != null) parameters.AddRange(new List<String> { "--hd_index", hd_index.ToString() });
+
+            return getResult<String>("importaccount", parameters);
         }
 
 
@@ -102,9 +106,11 @@ namespace mvs_rpc
             :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
             :param: ADMINAUTH(std::string): Administrator password required.
         */
-        public String stopmining(String ADMINNAME, String ADMINAUTH)
+        public String stopmining(String ADMINNAME = null, String ADMINAUTH = null)
         {
-            List<String> parameters = new List<String>() { ADMINNAME, ADMINAUTH };
+            List<String> parameters = new List<String>() { };
+            if (ADMINNAME != null && ADMINAUTH != null)
+                parameters.AddRange(new List<String> { ADMINNAME, ADMINAUTH });
 
             return getResult<String>("stopmining", parameters);
         }
@@ -120,12 +126,13 @@ namespace mvs_rpc
             :param: type_(uint16_t): "Transaction type, defaults to 0. 0 -- transfer etp, 3 -- transfer asset"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public String createmultisigtx(String ACCOUNTNAME, String ACCOUNTAUTH, String FROMADDRESS, String TOADDRESS, UInt64 AMOUNT, String symbol, UInt16 type_, UInt64 fee)
+        public String createmultisigtx(String ACCOUNTNAME, String ACCOUNTAUTH, String FROMADDRESS, String TOADDRESS, UInt64 AMOUNT, String symbol = null, UInt16? type_ = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FROMADDRESS, TOADDRESS, AMOUNT.ToString() };
-            parameters.AddRange(new List<String> { "--symbol", symbol.ToString() });
-            parameters.AddRange(new List<String> { "--type_", type_.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+
+            if (symbol != null) parameters.AddRange(new List<String> { "--symbol", symbol.ToString() });
+            if (type_ != null) parameters.AddRange(new List<String> { "--type_", type_.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
             return getResult<String>("createmultisigtx", parameters);
         }
 
@@ -139,6 +146,7 @@ namespace mvs_rpc
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, ADDRESS };
 
+
             return getResult<String>("getpublickey", parameters);
         }
 
@@ -151,13 +159,14 @@ namespace mvs_rpc
             :param: deposit(uint16_t): "Deposits support [7, 30, 90, 182, 365] days. defaluts to 7 days"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction deposit(String ACCOUNTNAME, String ACCOUNTAUTH, UInt64 AMOUNT, String address, UInt16 deposit, UInt64 fee)
+        public String deposit(String ACCOUNTNAME, String ACCOUNTAUTH, UInt64 AMOUNT, String address = null, UInt16? deposit = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, AMOUNT.ToString() };
-            parameters.AddRange(new List<String> { "--address", address.ToString() });
-            parameters.AddRange(new List<String> { "--deposit", deposit.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("deposit", parameters);
+
+            if (address != null) parameters.AddRange(new List<String> { "--address", address.ToString() });
+            if (deposit != null) parameters.AddRange(new List<String> { "--deposit", deposit.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("deposit", parameters);
         }
 
 
@@ -165,15 +174,29 @@ namespace mvs_rpc
             :param: ACCOUNTNAME(std::string): Account name required.
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
             :param: SYMBOL(std::string): "Asset symbol."
-            :param: cert(bool): "If specified, then only get related asset cert. Default is not specified."
         */
-        public List<asset> getaccountasset(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL, Boolean cert)
+        public String getaccountasset(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL = null)
         {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, SYMBOL };
-            parameters.AddRange(new List<String> { "--cert", cert.ToString() });
-            return getResult<List<asset>>("getaccountasset", parameters);
+            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH};
+            if (SYMBOL != null)
+                parameters.Add(SYMBOL);
+
+            return getResult<String>("getaccountasset", parameters);
         }
 
+        /*
+            :param: ACCOUNTNAME(std::string): Account name required.
+            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
+            :param: SYMBOL(std::string): "Asset symbol."
+        */
+        public String getaccountcert(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL = null)
+        {
+            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH,  "--cert" };
+            if (SYMBOL != null)
+                parameters.Add(SYMBOL);
+
+            return getResult<String>("getaccountasset", parameters);
+        }
 
         /*
             :param: ACCOUNTNAME(std::string): Account name required.
@@ -192,12 +215,13 @@ namespace mvs_rpc
             defaults to disable.
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction didsendasset(String ACCOUNTNAME, String ACCOUNTAUTH, String TO_, String ASSET, UInt64 AMOUNT, String model, UInt64 fee)
+        public String didsendasset(String ACCOUNTNAME, String ACCOUNTAUTH, String TO_, String ASSET, UInt64 AMOUNT, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TO_, ASSET, AMOUNT.ToString() };
-            parameters.AddRange(new List<String> { "--model", model.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("didsendasset", parameters);
+
+            if (model != null) parameters.AddRange(new List<String> { "--model", model.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("didsendasset", parameters);
         }
 
 
@@ -207,22 +231,12 @@ namespace mvs_rpc
             :param: SYMBOL(std::string): "The asset will be burned."
             :param: AMOUNT(uint64_t): "Asset integer bits. see asset <decimal_number>."
         */
-        public transaction burn(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL, UInt64 AMOUNT)
+        public String burn(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL, UInt64 AMOUNT)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, SYMBOL, AMOUNT.ToString() };
 
-            return getResult<transaction>("burn", parameters);
-        }
 
-
-        /*
-            :param: height(uint32_t): "specify the starting point to pop out blocks. eg, if specified 1000000, then all blocks with height greater than or equal to 1000000 will be poped out."
-        */
-        public String popblock(UInt32 height)
-        {
-            List<String> parameters = new List<String>() { height.ToString() };
-
-            return getResult<String>("popblock", parameters);
+            return getResult<String>("burn", parameters);
         }
 
 
@@ -233,13 +247,13 @@ namespace mvs_rpc
             :param: ACCOUNTNAME(std::string): Account name required.
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
         */
-        public List<balance> listbalances(Boolean nozero, UInt64 greater_equal, UInt64 lesser_equal, String ACCOUNTNAME, String ACCOUNTAUTH)
+        public String listbalances(String ACCOUNTNAME, String ACCOUNTAUTH, Boolean? nozero = null, UInt64? greater_equal = null, UInt64? lesser_equal = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
-            parameters.AddRange(new List<String> { "--nozero", nozero.ToString() });
-            parameters.AddRange(new List<String> { "--greater_equal", greater_equal.ToString() });
-            parameters.AddRange(new List<String> { "--lesser_equal", lesser_equal.ToString() });
-            return getResult<List<balance>>("listbalances", parameters);
+            if (nozero != null && nozero == true) parameters.Add("--nozero");
+            if (greater_equal != null) parameters.AddRange(new List<String> { "--greater_equal", greater_equal.ToString() });
+            if (lesser_equal != null) parameters.AddRange(new List<String> { "--lesser_equal", lesser_equal.ToString() });
+            return getResult<String>("listbalances", parameters);
         }
 
 
@@ -253,16 +267,14 @@ namespace mvs_rpc
             :param: decimalnumber(uint32_t): "The asset amount decimal number, defaults to 0."
             :param: description(std::string): "The asset data chuck, defaults to empty string."
         */
-        public asset createasset(String ACCOUNTNAME, String ACCOUNTAUTH, Int32 rate, String symbol, String issuer, UInt64 volume, UInt32 decimalnumber, String description)
+        public String createasset(String ACCOUNTNAME, String ACCOUNTAUTH, String symbol, String issuer, UInt64 volume, Int32? rate = null, UInt32? decimalnumber = null, String description = null)
         {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
-            parameters.AddRange(new List<String> { "--rate", rate.ToString() });
-            parameters.AddRange(new List<String> { "--symbol", symbol.ToString() });
-            parameters.AddRange(new List<String> { "--issuer", issuer.ToString() });
-            parameters.AddRange(new List<String> { "--volume", volume.ToString() });
-            parameters.AddRange(new List<String> { "--decimalnumber", decimalnumber.ToString() });
-            parameters.AddRange(new List<String> { "--description", description.ToString() });
-            return getResult<asset>("createasset", parameters);
+            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, "--symbol", symbol.ToString(), "--issuer", issuer.ToString(), "--volume", volume.ToString() };
+
+            if (rate != null) parameters.AddRange(new List<String> { "--rate", rate.ToString() });
+            if (decimalnumber != null) parameters.AddRange(new List<String> { "--decimalnumber", decimalnumber.ToString() });
+            if (description != null) parameters.AddRange(new List<String> { "--description", description.ToString() });
+            return getResult<String>("createasset", parameters);
         }
 
 
@@ -274,12 +286,13 @@ namespace mvs_rpc
             :param: memo(std::string): "Attached memo for this transaction."
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 etp bits"
         */
-        public transaction send(String ACCOUNTNAME, String ACCOUNTAUTH, String TOADDRESS, UInt64 AMOUNT, String memo, UInt64 fee)
+        public String send(String ACCOUNTNAME, String ACCOUNTAUTH, String TOADDRESS, UInt64 AMOUNT, String memo = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TOADDRESS, AMOUNT.ToString() };
-            parameters.AddRange(new List<String> { "--memo", memo.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("send", parameters);
+
+            if (memo != null) parameters.AddRange(new List<String> { "--memo", memo.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("send", parameters);
         }
 
 
@@ -288,11 +301,11 @@ namespace mvs_rpc
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
             :param: password(std::string): "The new password."
         */
-        public accountstatus changepasswd(String ACCOUNTNAME, String ACCOUNTAUTH, String password)
+        public String changepasswd(String ACCOUNTNAME, String ACCOUNTAUTH, String password)
         {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
-            parameters.AddRange(new List<String> { "--password", password.ToString() });
-            return getResult<accountstatus>("changepasswd", parameters);
+            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, "--password", password.ToString() };
+
+            return getResult<String>("changepasswd", parameters);
         }
 
 
@@ -306,35 +319,33 @@ namespace mvs_rpc
             :param: message(std::string): "Message/Information attached to this transaction"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public String createrawtx(UInt16 type_, List<String> senders, List<String> receivers, String symbol, UInt16 deposit, String mychange, String message, UInt64 fee)
+        public String createrawtx(UInt16 type_, List<String> senders, List<String> receivers, String symbol = null, UInt16? deposit = null, String mychange = null, String message = null, UInt64? fee = null)
         {
-            List<String> parameters = new List<String>() { };
-            parameters.AddRange(new List<String> { "--type_", type_.ToString() });
-            foreach (var i in senders)
-            {
+            List<String> parameters = new List<String>() { "--type_", type_.ToString() };
+
+            foreach (var i in senders)      
                 parameters.AddRange(new List<String> { "--senders", i.ToString() });
-            }
+            
             foreach (var i in receivers)
-            {
                 parameters.AddRange(new List<String> { "--receivers", i.ToString() });
-            }
-            parameters.AddRange(new List<String> { "--symbol", symbol.ToString() });
-            parameters.AddRange(new List<String> { "--deposit", deposit.ToString() });
-            parameters.AddRange(new List<String> { "--mychange", mychange.ToString() });
-            parameters.AddRange(new List<String> { "--message", message.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            
+            if (symbol != null) parameters.AddRange(new List<String> { "--symbol", symbol.ToString() });
+            if (deposit != null) parameters.AddRange(new List<String> { "--deposit", deposit.ToString() });
+            if (mychange != null) parameters.AddRange(new List<String> { "--mychange", mychange.ToString() });
+            if (message != null) parameters.AddRange(new List<String> { "--message", message.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
             return getResult<String>("createrawtx", parameters);
         }
 
 
         /*
-            :param: PAYMENT_ADDRESS(std::string): "Valid payment address. If not specified the address is read from STDIN."
+            :param: PAYMENT_ADDRESS(std::string): "Valid payment address. "
         */
-        public address validateaddress(String PAYMENT_ADDRESS)
+        public String validateaddress(String PAYMENT_ADDRESS )
         {
             List<String> parameters = new List<String>() { PAYMENT_ADDRESS };
 
-            return getResult<address>("validateaddress", parameters);
+            return getResult<String>("validateaddress", parameters);
         }
 
 
@@ -347,12 +358,13 @@ namespace mvs_rpc
             :param: memo(std::string): "The memo to descript transaction"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction sendfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROMADDRESS, String TOADDRESS, UInt64 AMOUNT, String memo, UInt64 fee)
+        public String sendfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROMADDRESS, String TOADDRESS, UInt64 AMOUNT, String memo = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FROMADDRESS, TOADDRESS, AMOUNT.ToString() };
-            parameters.AddRange(new List<String> { "--memo", memo.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("sendfrom", parameters);
+
+            if (memo != null) parameters.AddRange(new List<String> { "--memo", memo.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("sendfrom", parameters);
         }
 
 
@@ -361,11 +373,12 @@ namespace mvs_rpc
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
             :param: ADDRESS(std::string): "The multisig script corresponding address."
         */
-        public mulsignature deletemultisig(String ACCOUNTNAME, String ACCOUNTAUTH, String ADDRESS)
+        public String deletemultisig(String ACCOUNTNAME, String ACCOUNTAUTH, String ADDRESS)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, ADDRESS };
 
-            return getResult<mulsignature>("deletemultisig", parameters);
+
+            return getResult<String>("deletemultisig", parameters);
         }
 
 
@@ -373,11 +386,13 @@ namespace mvs_rpc
             :param: ACCOUNTNAME(std::string): Account name required.
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
         */
-        public List<did> listdids(String ACCOUNTNAME, String ACCOUNTAUTH)
+        public String listdids(String ACCOUNTNAME = null, String ACCOUNTAUTH = null)
         {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
+            List<String> parameters = new List<String>() { };
+            if (ACCOUNTNAME != null && ACCOUNTAUTH != null)
+                parameters.AddRange( new List<String> { ACCOUNTNAME, ACCOUNTAUTH });
 
-            return getResult<List<did>>("listdids", parameters);
+            return getResult<String>("listdids", parameters);
         }
 
 
@@ -385,11 +400,14 @@ namespace mvs_rpc
             :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
             :param: ADMINAUTH(std::string): Administrator password required.
         */
-        public UInt64 getheight(String ADMINNAME, String ADMINAUTH)
+        public String getheight(String ADMINNAME = null, String ADMINAUTH = null)
         {
-            List<String> parameters = new List<String>() { ADMINNAME, ADMINAUTH };
+            List<String> parameters = new List<String>() { };
+            if (ADMINNAME != null && ADMINAUTH != null)
+                parameters.AddRange(new List<String> { ADMINNAME, ADMINAUTH });
 
-            return getResult<UInt64>("getheight", parameters);
+
+            return getResult<String>("getheight", parameters);
         }
 
 
@@ -401,12 +419,13 @@ namespace mvs_rpc
             :param: memo(std::string): "Attached memo for this transaction."
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 etp bits"
         */
-        public transaction didsend(String ACCOUNTNAME, String ACCOUNTAUTH, String TO_, UInt64 AMOUNT, String memo, UInt64 fee)
+        public String didsend(String ACCOUNTNAME, String ACCOUNTAUTH, String TO_, UInt64 AMOUNT, String memo = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TO_, AMOUNT.ToString() };
-            parameters.AddRange(new List<String> { "--memo", memo.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("didsend", parameters);
+
+            if (memo != null) parameters.AddRange(new List<String> { "--memo", memo.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("didsend", parameters);
         }
 
 
@@ -418,11 +437,12 @@ namespace mvs_rpc
             :param: CERT(std::string): "Asset cert type name. eg. ISSUE, DOMAIN or NAMING"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction transfercert(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, String CERT, UInt64 fee)
+        public String transfercert(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, String CERT, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL, CERT };
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("transfercert", parameters);
+
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("transfercert", parameters);
         }
 
 
@@ -430,10 +450,11 @@ namespace mvs_rpc
             :param: TRANSACTION(string of hexcode): "The input Base16 transaction to broadcast."
             :param: fee(uint64_t): "The max tx fee. default_value 10 etp"
         */
-        public String sendrawtx(String TRANSACTION, UInt64 fee)
+        public String sendrawtx(String TRANSACTION, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { TRANSACTION };
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
             return getResult<String>("sendrawtx", parameters);
         }
 
@@ -446,25 +467,14 @@ namespace mvs_rpc
             :param: CERT(std::string): "Asset cert type name can be: ISSUE: cert of issuing asset, generated by issuing asset and used in secondaryissue asset.  DOMAIN: cert of domain, generated by issuing asset, the symbol is same as asset symbol(if it does not contain dot) or the prefix part(that before the first dot) of asset symbol. NAMING: cert of naming right of domain. The owner of domain cert can issue this type of cert by issuecert with symbol like “domain.XYZ”(domain is the symbol of domain cert)."
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction issuecert(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, String CERT, UInt64 fee)
+        public String issuecert(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, String CERT, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL, CERT };
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("issuecert", parameters);
+
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("issuecert", parameters);
         }
 
-
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: NUMBER(std::string): "Block number, or earliest, latest or pending"
-        */
-        public String fetchheaderext(String ACCOUNTNAME, String ACCOUNTAUTH, String NUMBER)
-        {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, NUMBER };
-
-            return getResult<String>("fetchheaderext", parameters);
-        }
 
 
         /*
@@ -485,12 +495,13 @@ namespace mvs_rpc
             defaults to disable.
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction didsendassetfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROM_, String TO_, String SYMBOL, UInt64 AMOUNT, String model, UInt64 fee)
+        public String didsendassetfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROM_, String TO_, String SYMBOL, UInt64 AMOUNT, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FROM_, TO_, SYMBOL, AMOUNT.ToString() };
-            parameters.AddRange(new List<String> { "--model", model.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("didsendassetfrom", parameters);
+
+            if (model != null) parameters.AddRange(new List<String> { "--model", model.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("didsendassetfrom", parameters);
         }
 
 
@@ -501,16 +512,16 @@ namespace mvs_rpc
             :param: mychange(std::string): "Mychange to this did/address"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction didsendmore(String ACCOUNTNAME, String ACCOUNTAUTH, List<String> receivers, String mychange, UInt64 fee)
+        public String didsendmore(String ACCOUNTNAME, String ACCOUNTAUTH, List<String> receivers, String mychange = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
+
             foreach (var i in receivers)
-            {
                 parameters.AddRange(new List<String> { "--receivers", i.ToString() });
-            }
-            parameters.AddRange(new List<String> { "--mychange", mychange.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("didsendmore", parameters);
+
+            if (mychange != null) parameters.AddRange(new List<String> { "--mychange", mychange.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("didsendmore", parameters);
         }
 
 
@@ -521,16 +532,16 @@ namespace mvs_rpc
             :param: mychange(std::string): "Mychange to this address"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction sendmore(String ACCOUNTNAME, String ACCOUNTAUTH, List<String> receivers, String mychange, UInt64 fee)
+        public String sendmore(String ACCOUNTNAME, String ACCOUNTAUTH, List<String> receivers, String mychange = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
+
             foreach (var i in receivers)
-            {
                 parameters.AddRange(new List<String> { "--receivers", i.ToString() });
-            }
-            parameters.AddRange(new List<String> { "--mychange", mychange.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("sendmore", parameters);
+            
+            if (mychange != null) parameters.AddRange(new List<String> { "--mychange", mychange.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("sendmore", parameters);
         }
 
 
@@ -539,11 +550,11 @@ namespace mvs_rpc
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
             :param: symbol(std::string): "The asset symbol/name. Global unique."
         */
-        public delasset deletelocalasset(String ACCOUNTNAME, String ACCOUNTAUTH, String symbol)
+        public String deletelocalasset(String ACCOUNTNAME, String ACCOUNTAUTH, String symbol)
         {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
-            parameters.AddRange(new List<String> { "--symbol", symbol.ToString() });
-            return getResult<delasset>("deletelocalasset", parameters);
+            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, "--symbol", symbol.ToString() };
+
+            return getResult<String>("deletelocalasset", parameters);
         }
 
 
@@ -556,15 +567,16 @@ namespace mvs_rpc
             :param: limit(uint64_t): "Transaction count per page."
             :param: index(uint64_t): "Page index."
         */
-        public transactions listtxs(String ACCOUNTNAME, String ACCOUNTAUTH, String address, Tuple<UInt64, UInt64> height, String symbol, UInt64 limit, UInt64 index)
+        public String listtxs(String ACCOUNTNAME, String ACCOUNTAUTH, String address = null, Tuple<UInt64, UInt64> height = null, String symbol = null, UInt64? limit = null, UInt64? index = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
-            parameters.AddRange(new List<String> { "--address", address.ToString() });
-            parameters.AddRange(new List<String> { "--height", String.Format("{0}:{1}", height.Item1, height.Item2) });
-            parameters.AddRange(new List<String> { "--symbol", symbol.ToString() });
-            parameters.AddRange(new List<String> { "--limit", limit.ToString() });
-            parameters.AddRange(new List<String> { "--index", index.ToString() });
-            return getResult<transactions>("listtxs", parameters);
+
+            if (address != null) parameters.AddRange(new List<String> { "--address", address.ToString() });
+            if (height != null) parameters.AddRange(new List<String> { "--height", String.Format("{0}:{1}", height.Item1, height.Item2) });
+            if (symbol != null) parameters.AddRange(new List<String> { "--symbol", symbol.ToString() });
+            if (limit != null) parameters.AddRange(new List<String> { "--limit", limit.ToString() });
+            if (index != null) parameters.AddRange(new List<String> { "--index", index.ToString() });
+            return getResult<String>("listtxs", parameters);
         }
 
 
@@ -575,14 +587,14 @@ namespace mvs_rpc
             :param: index(uint32_t): "Page index."
             :param: current(bool): "If specified then show the lastest information of specified MIT. Default is not specified."
         */
-        public List<mit> getmit(String SYMBOL, Boolean trace, UInt32 limit, UInt32 index, Boolean current)
+        public String getmit(String SYMBOL = null, Boolean? trace = null, UInt32? limit = null, UInt32? index = null, Boolean? current = null)
         {
             List<String> parameters = new List<String>() { SYMBOL };
-            parameters.AddRange(new List<String> { "--trace", trace.ToString() });
-            parameters.AddRange(new List<String> { "--limit", limit.ToString() });
-            parameters.AddRange(new List<String> { "--index", index.ToString() });
-            parameters.AddRange(new List<String> { "--current", current.ToString() });
-            return getResult<List<mit>>("getmit", parameters);
+            if (trace!=null && trace == true) parameters.Add("--trace");
+            if (current != null && current == true) parameters.Add("--current");
+            if (limit != null) parameters.AddRange(new List<String> { "--limit", limit.ToString() });
+            if (index != null) parameters.AddRange(new List<String> { "--index", index.ToString() });
+            return getResult<String>("getmit", parameters);
         }
 
 
@@ -591,11 +603,12 @@ namespace mvs_rpc
             :param: ACCOUNTNAME(std::string): Account name required.
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
         */
-        public account getnewaccount(String language, String ACCOUNTNAME, String ACCOUNTAUTH)
+        public String getnewaccount(String ACCOUNTNAME, String ACCOUNTAUTH, String language = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
-            parameters.AddRange(new List<String> { "--language", language.ToString() });
-            return getResult<account>("getnewaccount", parameters);
+
+            if (language != null) parameters.AddRange(new List<String> { "--language", language.ToString() });
+            return getResult<String>("getnewaccount", parameters);
         }
 
 
@@ -603,11 +616,13 @@ namespace mvs_rpc
             :param: ACCOUNTNAME(std::string): Account name required.
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
         */
-        public List<mit> listmits(String ACCOUNTNAME, String ACCOUNTAUTH)
+        public String listmits(String ACCOUNTNAME = null, String ACCOUNTAUTH = null)
         {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
+            List<String> parameters = new List<String>() {  };
+            if (ACCOUNTNAME != null && ACCOUNTAUTH != null)
+                parameters.AddRange(new List<String> { ACCOUNTNAME, ACCOUNTAUTH });
 
-            return getResult<List<mit>>("listmits", parameters);
+            return getResult<String>("listmits", parameters);
         }
 
 
@@ -615,9 +630,11 @@ namespace mvs_rpc
             :param: ADMINNAME(std::string): "admin name."
             :param: ADMINAUTH(std::string): "admin password/authorization."
         */
-        public String shutdown(String ADMINNAME, String ADMINAUTH)
+        public String shutdown(String ADMINNAME = null, String ADMINAUTH = null)
         {
-            List<String> parameters = new List<String>() { ADMINNAME, ADMINAUTH };
+            List<String> parameters = new List<String>() {};
+            if (ADMINNAME != null && ADMINAUTH != null)
+                parameters.AddRange(new List<String> { ADMINNAME, ADMINAUTH });
 
             return getResult<String>("shutdown", parameters);
         }
@@ -628,11 +645,12 @@ namespace mvs_rpc
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
             :param: TRANSACTION(string of hexcode): "The input Base16 transaction to sign."
         */
-        public rawtx signrawtx(String ACCOUNTNAME, String ACCOUNTAUTH, String TRANSACTION)
+        public String signrawtx(String ACCOUNTNAME, String ACCOUNTAUTH, String TRANSACTION)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TRANSACTION };
 
-            return getResult<rawtx>("signrawtx", parameters);
+
+            return getResult<String>("signrawtx", parameters);
         }
 
 
@@ -641,11 +659,15 @@ namespace mvs_rpc
             :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
             :param: ADMINAUTH(std::string): Administrator password required.
         */
-        public List<transaction> getmemorypool(Boolean json, String ADMINNAME, String ADMINAUTH)
+        public String getmemorypool(Boolean? json = null, String ADMINNAME = null, String ADMINAUTH = null)
         {
-            List<String> parameters = new List<String>() { ADMINNAME, ADMINAUTH };
-            parameters.AddRange(new List<String> { "--json", json.ToString() });
-            return getResult<List<transaction>>("getmemorypool", parameters);
+            List<String> parameters = new List<String>() {};
+            if (ADMINNAME != null && ADMINAUTH != null)
+                parameters.AddRange(new List<String> { ADMINNAME, ADMINAUTH });
+
+
+            if (json != null) parameters.AddRange(new List<String> { "--json", json.ToString() });
+            return getResult<String>("getmemorypool", parameters);
         }
 
 
@@ -653,12 +675,13 @@ namespace mvs_rpc
             :param: hash(string of hash256): "The Base16 block hash."
             :param: height(uint32_t): "The block height."
         */
-        public blockheader getblockheader(String hash, UInt32 height)
+        public String getblockheader(String hash = null, UInt32? height = null)
         {
             List<String> parameters = new List<String>() { };
-            parameters.AddRange(new List<String> { "--hash", hash.ToString() });
-            parameters.AddRange(new List<String> { "--height", height.ToString() });
-            return getResult<blockheader>("getblockheader", parameters);
+
+            if (hash != null) parameters.AddRange(new List<String> { "--hash", hash.ToString() });
+            if (height != null) parameters.AddRange(new List<String> { "--height", height.ToString() });
+            return getResult<String>("getblockheader", parameters);
         }
 
 
@@ -667,11 +690,15 @@ namespace mvs_rpc
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
             :param: cert(bool): "If specified, then only get related asset cert. Default is not specified."
         */
-        public List<asset> listassets(String ACCOUNTNAME, String ACCOUNTAUTH, Boolean cert)
+        public String listassets(String ACCOUNTNAME = null, String ACCOUNTAUTH = null, Boolean? cert = null)
         {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
-            parameters.AddRange(new List<String> { "--cert", cert.ToString() });
-            return getResult<List<asset>>("listassets", parameters);
+            List<String> parameters = new List<String>() { };
+            if (ACCOUNTNAME != null && ACCOUNTAUTH != null)
+                parameters.AddRange(new List<String> { ACCOUNTNAME, ACCOUNTAUTH });
+
+            if (cert == true) parameters.Add("--cert");
+
+            return getResult<String>("listassets", parameters);
         }
 
 
@@ -693,24 +720,33 @@ namespace mvs_rpc
             defaults to disable.
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction sendassetfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROMADDRESS, String TOADDRESS, String SYMBOL, UInt64 AMOUNT, String model, UInt64 fee)
+        public String sendassetfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROMADDRESS, String TOADDRESS, String SYMBOL, UInt64 AMOUNT, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FROMADDRESS, TOADDRESS, SYMBOL, AMOUNT.ToString() };
-            parameters.AddRange(new List<String> { "--model", model.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("sendassetfrom", parameters);
+
+            if (model != null) parameters.AddRange(new List<String> { "--model", model.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("sendassetfrom", parameters);
         }
 
 
         /*
             :param: SYMBOL(std::string): "Asset symbol. If not specified, will show whole network asset symbols."
-            :param: cert(bool): "If specified, then only get related asset cert. Default is not specified."
         */
-        public List<String> getasset(String SYMBOL, Boolean cert)
+        public String getasset(String SYMBOL)
         {
             List<String> parameters = new List<String>() { SYMBOL };
-            parameters.AddRange(new List<String> { "--cert", cert.ToString() });
-            return getResult<List<String>>("getasset", parameters);
+
+            return getResult<String>("getasset", parameters);
+        }
+        /*
+            :param: SYMBOL(std::string): "Asset symbol. If not specified, will show whole network asset symbols."
+        */
+        public String getassetcert(String SYMBOL)
+        {
+            List<String> parameters = new List<String>() { SYMBOL, "--cert" };
+
+            return getResult<String>("getasset", parameters);
         }
 
 
@@ -718,11 +754,13 @@ namespace mvs_rpc
             :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
             :param: ADMINAUTH(std::string): Administrator password required.
         */
-        public info getinfo(String ADMINNAME, String ADMINAUTH)
+        public String getinfo(String ADMINNAME = null, String ADMINAUTH = null)
         {
-            List<String> parameters = new List<String>() { ADMINNAME, ADMINAUTH };
+            List<String> parameters = new List<String>() {};
+            if (ADMINNAME != null && ADMINAUTH != null)
+                parameters.AddRange(new List<String> { ADMINNAME, ADMINAUTH });
 
-            return getResult<info>("getinfo", parameters);
+            return getResult<String>("getinfo", parameters);
         }
 
 
@@ -743,37 +781,47 @@ namespace mvs_rpc
             defaults to disable.
             :param: fee(uint64_t): "The fee of tx. default_value 10000 ETP bits"
         */
-        public transaction secondaryissue(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, UInt64 VOLUME, String model, UInt64 fee)
+        public String secondaryissue(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, UInt64 VOLUME, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL, VOLUME.ToString() };
-            parameters.AddRange(new List<String> { "--model", model.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("secondaryissue", parameters);
+
+            if (model != null) parameters.AddRange(new List<String> { "--model", model.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("secondaryissue", parameters);
         }
 
 
         /*
             :param: ADDRESS(std::string): "address"
-            :param: cert(bool): "If specified, then only get related asset cert. Default is not specified."
         */
-        public List<asset> getaddressasset(String ADDRESS, Boolean cert)
+        public String getaddressasset(String ADDRESS)
         {
             List<String> parameters = new List<String>() { ADDRESS };
-            parameters.AddRange(new List<String> { "--cert", cert.ToString() });
-            return getResult<List<asset>>("getaddressasset", parameters);
+
+            return getResult<String>("getaddressasset", parameters);
         }
 
+        /*
+            :param: ADDRESS(std::string): "address"
+        */
+        public String getaddresscert(String ADDRESS)
+        {
+            List<String> parameters = new List<String>() { ADDRESS, "--cert" };
+
+            return getResult<String>("getaddressasset", parameters);
+        }
 
         /*
             :param: ACCOUNTNAME(std::string): Account name required.
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
             :param: number(std::uint32_t): "The number of addresses to be generated, defaults to 1."
         */
-        public List<String> getnewaddress(String ACCOUNTNAME, String ACCOUNTAUTH, UInt32 number)
+        public String getnewaddress(String ACCOUNTNAME, String ACCOUNTAUTH, UInt32? number = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
-            parameters.AddRange(new List<String> { "--number", number.ToString() });
-            return getResult<List<String>>("getnewaddress", parameters);
+
+            if (number != null) parameters.AddRange(new List<String> { "--number", number.ToString() });
+            return getResult<String>("getnewaddress", parameters);
         }
 
 
@@ -781,11 +829,11 @@ namespace mvs_rpc
             :param: ACCOUNTNAME(std::string): Account name required.
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
         */
-        public balances getbalance(String ACCOUNTNAME, String ACCOUNTAUTH)
+        public String getbalance(String ACCOUNTNAME, String ACCOUNTAUTH)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
 
-            return getResult<balances>("getbalance", parameters);
+            return getResult<String>("getbalance", parameters);
         }
 
 
@@ -798,9 +846,10 @@ namespace mvs_rpc
             :param: publickey(list of string): "cosigner public key used for multisig"
             :param: description(std::string): "multisig record description."
         */
-        public mulsignature getnewmultisig(String ACCOUNTNAME, String ACCOUNTAUTH, UInt16 signaturenum, UInt16 publickeynum, String selfpublickey, List<String> publickey, String description)
+        public String getnewmultisig(String ACCOUNTNAME, String ACCOUNTAUTH, UInt16 signaturenum, UInt16 publickeynum, String selfpublickey, List<String> publickey = null, String description = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
+
             parameters.AddRange(new List<String> { "--signaturenum", signaturenum.ToString() });
             parameters.AddRange(new List<String> { "--publickeynum", publickeynum.ToString() });
             parameters.AddRange(new List<String> { "--selfpublickey", selfpublickey.ToString() });
@@ -808,8 +857,8 @@ namespace mvs_rpc
             {
                 parameters.AddRange(new List<String> { "--publickey", i.ToString() });
             }
-            parameters.AddRange(new List<String> { "--description", description.ToString() });
-            return getResult<mulsignature>("getnewmultisig", parameters);
+            if (description != null) parameters.AddRange(new List<String> { "--description", description.ToString() });
+            return getResult<String>("getnewmultisig", parameters);
         }
 
 
@@ -820,11 +869,12 @@ namespace mvs_rpc
             :param: SYMBOL(std::string): "Asset MIT symbol"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction transfermit(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, UInt64 fee)
+        public String transfermit(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL };
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("transfermit", parameters);
+
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("transfermit", parameters);
         }
 
 
@@ -833,11 +883,11 @@ namespace mvs_rpc
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
             :param: LASTWORD(std::string): "The last word of your private-key phrase."
         */
-        public accountstatus deleteaccount(String ACCOUNTNAME, String ACCOUNTAUTH, String LASTWORD)
+        public String deleteaccount(String ACCOUNTNAME, String ACCOUNTAUTH, String LASTWORD)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, LASTWORD };
 
-            return getResult<accountstatus>("deleteaccount", parameters);
+            return getResult<String>("deleteaccount", parameters);
         }
 
 
@@ -845,22 +895,30 @@ namespace mvs_rpc
             :param: ACCOUNTNAME(std::string): Account name required.
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
         */
-        public List<mulsignature> listmultisig(String ACCOUNTNAME, String ACCOUNTAUTH)
+        public String listmultisig(String ACCOUNTNAME, String ACCOUNTAUTH)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
 
-            return getResult<List<mulsignature>>("listmultisig", parameters);
+            return getResult<String>("listmultisig", parameters);
         }
 
 
         /*
-            :param: DidOrAddress(std::string): "Did symbol or standard address; If no input parameters, then display whole network DIDs."
+            :param: DidOrAddress(std::string): "Did symbol or standard address"
         */
-        public List<didhistoryaddress> getdid(String DidOrAddress)
+        public String getdid(String didOrAddress)
         {
-            List<String> parameters = new List<String>() { DidOrAddress };
+            List<String> parameters = new List<String>() { didOrAddress };
+           
+            return getResult<String>("getdid", parameters);
+        }
 
-            return getResult<List<didhistoryaddress>>("getdid", parameters);
+        /*
+            :param: DidOrAddress(std::string): "display whole network DIDs."
+        */
+        public String getdid()
+        {
+            return getResult<String>("getdid", null);
         }
 
 
@@ -870,11 +928,12 @@ namespace mvs_rpc
             :param: address(std::string): "The mining target address. Defaults to empty, means a new address will be generated."
             :param: number(uint16_t): "The number of mining blocks, useful for testing. Defaults to 0, means no limit."
         */
-        public String startmining(String ACCOUNTNAME, String ACCOUNTAUTH, String address, UInt16 number)
+        public String startmining(String ACCOUNTNAME, String ACCOUNTAUTH, String address = null, UInt16? number = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
-            parameters.AddRange(new List<String> { "--address", address.ToString() });
-            parameters.AddRange(new List<String> { "--number", number.ToString() });
+
+            if (address != null) parameters.AddRange(new List<String> { "--address", address.ToString() });
+            if (number != null) parameters.AddRange(new List<String> { "--number", number.ToString() });
             return getResult<String>("startmining", parameters);
         }
 
@@ -883,11 +942,13 @@ namespace mvs_rpc
             :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
             :param: ADMINAUTH(std::string): Administrator password required.
         */
-        public List<String> getwork(String ADMINNAME, String ADMINAUTH)
+        public String getwork(String ADMINNAME = null, String ADMINAUTH = null)
         {
-            List<String> parameters = new List<String>() { ADMINNAME, ADMINAUTH };
+            List<String> parameters = new List<String>() { };
+            if (ADMINNAME != null || ADMINAUTH != null)
+                parameters.AddRange(new List<String> { ADMINNAME , ADMINAUTH });
 
-            return getResult<List<String>>("getwork", parameters);
+            return getResult<String>("getwork", parameters);
         }
 
 
@@ -897,9 +958,9 @@ namespace mvs_rpc
             :param: FILE(string of file path): "key file path."
             :param: FILECONTENT(std::string): "key file content. this will omit the FILE argument if specified."
         */
-        public String importkeyfile(String ACCOUNTNAME, String ACCOUNTAUTH, String FILE, String FILECONTENT)
+        public String importkeyfile(String ACCOUNTNAME, String ACCOUNTAUTH, String FILE)
         {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FILE, FILECONTENT };
+            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FILE };
 
             return getResult<String>("importkeyfile", parameters);
         }
@@ -908,11 +969,12 @@ namespace mvs_rpc
         /*
             :param: TRANSACTION(string of hexcode): "The input Base16 transaction to sign."
         */
-        public transaction decoderawtx(String TRANSACTION)
+        public String decoderawtx(String TRANSACTION)
         {
             List<String> parameters = new List<String>() { TRANSACTION };
 
-            return getResult<transaction>("decoderawtx", parameters);
+
+            return getResult<String>("decoderawtx", parameters);
         }
 
 
@@ -933,12 +995,13 @@ namespace mvs_rpc
             defaults to disable.
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction sendasset(String ACCOUNTNAME, String ACCOUNTAUTH, String ADDRESS, String SYMBOL, UInt64 AMOUNT, String model, UInt64 fee)
+        public String sendasset(String ACCOUNTNAME, String ACCOUNTAUTH, String ADDRESS, String SYMBOL, UInt64 AMOUNT, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, ADDRESS, SYMBOL, AMOUNT.ToString() };
-            parameters.AddRange(new List<String> { "--model", model.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("sendasset", parameters);
+
+            if (model != null) parameters.AddRange(new List<String> { "--model", model.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("sendasset", parameters);
         }
 
 
@@ -947,11 +1010,12 @@ namespace mvs_rpc
             :param: HEADERHASH(std::string): "header hash. with leading 0x"
             :param: MIXHASH(std::string): "mix hash. with leading 0x"
         */
-        public Boolean submitwork(String NONCE, String HEADERHASH, String MIXHASH)
+        public String submitwork(String NONCE, String HEADERHASH, String MIXHASH)
         {
             List<String> parameters = new List<String>() { NONCE, HEADERHASH, MIXHASH };
 
-            return getResult<Boolean>("submitwork", parameters);
+
+            return getResult<String>("submitwork", parameters);
         }
 
 
@@ -962,6 +1026,7 @@ namespace mvs_rpc
         {
             List<String> parameters = new List<String>() { PAYMENT_ADDRESS };
 
+
             return getResult<String>("getaddressetp", parameters);
         }
 
@@ -970,11 +1035,13 @@ namespace mvs_rpc
             :param: json(bool): "Json/Raw format, default is '--json=true'."
             :param: HASH(string of hash256): "The Base16 transaction hash of the transaction to get. If not specified the transaction hash is read from STDIN."
         */
-        public transaction gettx(Boolean json, String HASH)
+        public String gettx(String HASH, Boolean? json = null)
         {
-            List<String> parameters = new List<String>() { json.ToString(), HASH };
+            List<String> parameters = new List<String>() {HASH };
+            if (json != null)
+                parameters.Add("--json");
 
-            return getResult<transaction>("gettx", parameters);
+            return getResult<String>("gettx", parameters);
         }
 
 
@@ -982,11 +1049,13 @@ namespace mvs_rpc
             :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
             :param: ADMINAUTH(std::string): Administrator password required.
         */
-        public mining_info getmininginfo(String ADMINNAME, String ADMINAUTH)
+        public String getmininginfo(String ADMINNAME = null, String ADMINAUTH = null)
         {
-            List<String> parameters = new List<String>() { ADMINNAME, ADMINAUTH };
+            List<String> parameters = new List<String>() {};
+            if(ADMINNAME != null && ADMINAUTH!= null)
+                parameters.AddRange(new List<String>{ ADMINNAME, ADMINAUTH});
 
-            return getResult<mining_info>("getmininginfo", parameters);
+            return getResult<String>("getmininginfo", parameters);
         }
 
 
@@ -999,16 +1068,16 @@ namespace mvs_rpc
             :param: mits(list of string): "List of symbol and content pair. Symbol and content are separated by a ':'"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction registermit(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, String content, List<String> mits, UInt64 fee)
+        public String registermit(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, String content = null, List<String> mits = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL };
-            parameters.AddRange(new List<String> { "--content", content.ToString() });
-            foreach (var i in mits)
-            {
+
+            if (content != null) parameters.AddRange(new List<String> { "--content", content.ToString() });
+            foreach (var i in mits)   
                 parameters.AddRange(new List<String> { "--mits", i.ToString() });
-            }
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("registermit", parameters);
+            
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("registermit", parameters);
         }
 
 
@@ -1021,6 +1090,7 @@ namespace mvs_rpc
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, PAYMENT_ADDRESS };
 
+
             return getResult<String>("setminingaccount", parameters);
         }
 
@@ -1029,11 +1099,12 @@ namespace mvs_rpc
             :param: ACCOUNTNAME(std::string): Account name required.
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
         */
-        public List<String> listaddresses(String ACCOUNTNAME, String ACCOUNTAUTH)
+        public String listaddresses(String ACCOUNTNAME, String ACCOUNTAUTH)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
 
-            return getResult<List<String>>("listaddresses", parameters);
+
+            return getResult<String>("listaddresses", parameters);
         }
 
 
@@ -1044,10 +1115,11 @@ namespace mvs_rpc
             :param: DESTINATION(string of file path): "The keyfile storage path to."
             :param: data(bool): "If specified, the keyfile content will be append to the report, rather than to local file specified by DESTINATION."
         */
-        public String dumpkeyfile(String ACCOUNTNAME, String ACCOUNTAUTH, String LASTWORD, String DESTINATION, Boolean data)
+        public String dumpkeyfile(String ACCOUNTNAME, String ACCOUNTAUTH, String LASTWORD, String DESTINATION = null, Boolean? data = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, LASTWORD, DESTINATION };
-            parameters.AddRange(new List<String> { "--data", data.ToString() });
+            if (data == true) parameters.Add("--data");
+
             return getResult<String>("dumpkeyfile", parameters);
         }
 
@@ -1056,11 +1128,13 @@ namespace mvs_rpc
             :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
             :param: ADMINAUTH(std::string): Administrator password required.
         */
-        public List<String> getpeerinfo(String ADMINNAME, String ADMINAUTH)
+        public String getpeerinfo(String ADMINNAME = null, String ADMINAUTH = null)
         {
-            List<String> parameters = new List<String>() { ADMINNAME, ADMINAUTH };
+            List<String> parameters = new List<String>() { };
+            if (ADMINNAME != null && ADMINAUTH != null)
+                parameters.AddRange(new List<String> { ADMINNAME, ADMINAUTH });
 
-            return getResult<List<String>>("getpeerinfo", parameters);
+            return getResult<String>("getpeerinfo", parameters);
         }
 
 
@@ -1073,12 +1147,13 @@ namespace mvs_rpc
             :param: memo(std::string): "The memo to descript transaction"
             :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
         */
-        public transaction didsendfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROM_, String TO_, UInt64 AMOUNT, String memo, UInt64 fee)
+        public String didsendfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROM_, String TO_, UInt64 AMOUNT, String memo = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FROM_, TO_, AMOUNT.ToString() };
-            parameters.AddRange(new List<String> { "--memo", memo.ToString() });
-            parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<transaction>("didsendfrom", parameters);
+
+            if (memo != null) parameters.AddRange(new List<String> { "--memo", memo.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("didsendfrom", parameters);
         }
 
 
@@ -1087,11 +1162,12 @@ namespace mvs_rpc
             :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
             :param: LASTWORD(std::string): "The last word of your backup words."
         */
-        public accountresult getaccount(String ACCOUNTNAME, String ACCOUNTAUTH, String LASTWORD)
+        public String getaccount(String ACCOUNTNAME, String ACCOUNTAUTH, String LASTWORD)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, LASTWORD };
 
-            return getResult<accountresult>("getaccount", parameters);
+
+            return getResult<String>("getaccount", parameters);
         }
 
 
@@ -1101,10 +1177,14 @@ namespace mvs_rpc
             :param: ADMINAUTH(std::string): "admin password/authorization."
             :param: operation(std::string): "The operation[ add|ban ] to the target node address. default: add."
         */
-        public String addnode(String NODEADDRESS, String ADMINNAME, String ADMINAUTH, String operation)
+        public String addnode(String NODEADDRESS, String ADMINNAME = null, String ADMINAUTH = null, String operation = null)
         {
-            List<String> parameters = new List<String>() { NODEADDRESS, ADMINNAME, ADMINAUTH };
-            parameters.AddRange(new List<String> { "--operation", operation.ToString() });
+            List<String> parameters = new List<String>() { NODEADDRESS };
+            if(ADMINNAME != null && ADMINAUTH!= null)
+                parameters.AddRange(new List<String>{ ADMINNAME, ADMINAUTH});
+
+
+            if (operation != null) parameters.AddRange(new List<String> { "--operation", operation.ToString() });
             return getResult<String>("addnode", parameters);
         }
 
@@ -1114,12 +1194,16 @@ namespace mvs_rpc
             :param: json(bool): "Json/Raw format, default is '--json=true'."
             :param: tx_json(bool): "Json/Raw format for txs, default is '--tx_json=true'."
         */
-        public block getblock(String HASH_OR_HEIGH, Boolean json, Boolean tx_json)
+        public String getblock(String HASH_OR_HEIGH, Boolean? json = null, Boolean? tx_json = null)
         {
-            List<String> parameters = new List<String>() { HASH_OR_HEIGH, json.ToString(), tx_json.ToString() };
+            List<String> parameters = new List<String>() { HASH_OR_HEIGH};
+            if (json != null) parameters.AddRange(new List<String> { "--json", json.ToString() });
+            if (tx_json != null) parameters.AddRange(new List<String> { "--tx_json", json.ToString() });
 
-            return getResult<block>("getblock", parameters);
+
+            return getResult<String>("getblock", parameters);
         }
+
 
     }
 
