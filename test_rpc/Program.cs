@@ -15,7 +15,7 @@ namespace test_rpc
             try
             {
                 RPC rpc = new RPC();
-                rpc.URL = System.Configuration.ConfigurationSettings.AppSettings["host"];           
+                rpc.URL = System.Configuration.ConfigurationManager.AppSettings["host"];           
                 rpc.VERSION = (rpcversion)Enum.Parse(typeof(rpcversion), System.Configuration.ConfigurationManager.AppSettings["version"]);
 
                 Object ret = null;
