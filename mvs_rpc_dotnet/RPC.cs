@@ -57,7 +57,7 @@ namespace mvs_rpc
         {
             JsonRPCReqHeader helper = new JsonRPCReqHeader();
             helper.id = 10000;
-            helper.jsonrpc = getRpcVersion();
+            helper.jsonrpc = "2.0";
             helper.parameters = new List<String>();
             helper.method = method;
             if (parameters != null)
@@ -67,23 +67,6 @@ namespace mvs_rpc
             return JsonExtension.ObjectToJson(helper);
         }
 
-        public String getRpcVersion()
-        {
-            String jsonrpc = "";
-            switch (version_)
-            {
-                case rpcversion.v1:
-                    jsonrpc = "1.0";
-                    break;
-                case rpcversion.v2:
-                    jsonrpc = "2.0";
-                    break;
-                case rpcversion.v3:
-                    jsonrpc = "3.0";
-                    break;
-            }
-            return jsonrpc;
-        }
 
         private JsonRPCResponse postRequest(String postData)
         {
