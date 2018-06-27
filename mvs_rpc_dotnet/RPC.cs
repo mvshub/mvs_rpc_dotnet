@@ -15,6 +15,12 @@ namespace mvs_rpc
 {
     public partial class RPC
     {
+        public RPC(String url= "http://127.0.0.1:8820", rpcversion version = rpcversion.v3)
+        {
+            url_ = url;
+            version_ = version;
+        }
+
         public String help(String method=null)
         {
             if(method == null)
@@ -33,7 +39,6 @@ namespace mvs_rpc
 
         public T getResult<T>(String method, List<String> parameters)
         {
-            Console.WriteLine("method:" + method + ",parameters:" +String.Join(" ", parameters.ToArray()));
             JsonRPCResponse rpc_res = null;
 
             rpc_res = postRequest(formatPostField(method, parameters));
@@ -115,9 +120,8 @@ namespace mvs_rpc
             return response;
         }
 
-        private String url_ = "http://127.0.0.1:8820";
-        private rpcversion version_ = rpcversion.v3;
-
+        private String url_;
+        private rpcversion version_;
 
         public String URL {
             get

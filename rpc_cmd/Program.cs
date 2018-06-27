@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using mvs_rpc;
 using System.Reflection;
+using mvs_rpc;
 
-namespace test_rpc
+namespace rpc_cmd
 {
     class Program
     {
@@ -14,9 +14,8 @@ namespace test_rpc
         {
             try
             {
-                RPC rpc = new RPC();
-                rpc.URL = System.Configuration.ConfigurationManager.AppSettings["host"];           
-                rpc.VERSION = (rpcversion)Enum.Parse(typeof(rpcversion), System.Configuration.ConfigurationManager.AppSettings["version"]);
+                RPC rpc = new RPC(System.Configuration.ConfigurationManager.AppSettings["host"]
+            , (rpcversion)Enum.Parse(typeof(rpcversion), System.Configuration.ConfigurationManager.AppSettings["version"]));
 
                 Object ret = null;
 
@@ -71,15 +70,13 @@ namespace test_rpc
 
             catch (Exception e)
             {
-                String strOut= e.Message;
-                if(e.InnerException != null)
+                String strOut = e.Message;
+                if (e.InnerException != null)
                 {
                     strOut = e.InnerException.Message;
                 }
                 Console.WriteLine(strOut);
             }
-
-
         }
     }
 }
