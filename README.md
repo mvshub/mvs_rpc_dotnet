@@ -30,7 +30,7 @@ String block = rpc.getblock(1200000);
 ```
 
 ## All interfaces
-```js
+### account
 - getnewaccount
 - getaccount
 - deleteaccount
@@ -41,7 +41,7 @@ String block = rpc.getblock(1200000);
 - listaddresses
 - dumpkeyfile
 - importkeyfile
-- 
+### blockchain
 - shutdown
 - getinfo
 - addnode
@@ -53,10 +53,10 @@ String block = rpc.getblock(1200000);
 - getwork
 - submitwork
 - getmemorypool
-- 
 - getheight
 - getblock
 - getblockheader
+### transaction
 - fetchheaderext
 - gettx
 - listtxs
@@ -64,14 +64,14 @@ String block = rpc.getblock(1200000);
 - decoderawtx
 - signrawtx
 - sendrawtx
-- 
+ ### multisignature
 - getpublickey
 - createmultisigtx
 - getnewmultisig
 - listmultisig
 - deletemultisig
 - signmultisigtx
-- 
+ ### etp
 - send
 - sendmore
 - sendfrom
@@ -79,7 +79,7 @@ String block = rpc.getblock(1200000);
 - listbalances
 - getbalance
 - getaddressetp
-- 
+ ### asset
 - createasset
 - deletelocalasset
 - issue
@@ -91,15 +91,15 @@ String block = rpc.getblock(1200000);
 - getaccountasset
 - getaddressasset
 - burn
-- 
+ ### cert
 - issuecert
 - transfercert
-- 
+ ### mit
 - registermit
 - transfermit
 - listmits
 - getmit
-- 
+ ### did
 - registerdid
 - didsend
 - didsendfrom
@@ -109,7 +109,8 @@ String block = rpc.getblock(1200000);
 - didchangeaddress
 - listdids
 - getdid
-```
+
+
 # Todo
 
 Add more call methods.
