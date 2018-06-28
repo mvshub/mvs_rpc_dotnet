@@ -37,7 +37,7 @@ namespace mvs_rpc
             return help();
         }
 
-        public T getResult<T>(String method, List<String> parameters)
+        private T getResult<T>(String method, List<String> parameters)
         {
             JsonRPCResponse rpc_res = null;
 

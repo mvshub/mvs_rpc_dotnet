@@ -11,10 +11,12 @@ namespace mvs_rpc
     public partial class RPC
     {
         //////////////BLOCK//////////////////////////////////////////////////////////////////////////////////
-        /*
-            :param: hash(string of hash256): "The Base16 block hash."
-            :param: height(uint32_t): "The block height."
-        */
+        /// <summary>
+        /// get block header from hash or height
+        /// </summary>
+        /// <param name="hash" >The Base16 block hash.</param>
+        /// <param name="height">The block height.</param>
+        /// <returns></returns>
         public String getblockheader(String hash = null, UInt32? height = null)
         {
             List<String> parameters = new List<String>() { };
@@ -24,11 +26,14 @@ namespace mvs_rpc
             return getResult<String>("getblockheader", parameters);
         }
 
-        /*
-            :param: HASH_OR_HEIGH(std::string): "block hash or block height"
-            :param: json(bool): "Json/Raw format, default is '--json=true'."
-            :param: tx_json(bool): "Json/Raw format for txs, default is '--tx_json=true'."
-        */
+
+        /// <summary>
+        /// get block detail from hash or height
+        /// </summary>
+        /// <param name="HASH_OR_HEIGH">block hash or block height</param>
+        /// <param name="json">Json/Raw format, default is '--json=true'.</param>
+        /// <param name="tx_json">Json/Raw format for txs, default is '--tx_json=true'.</param>
+        /// <returns>rawtx when json = false , txs use rawtx when tx_json = false </returns>
         public String getblock(String HASH_OR_HEIGH, Boolean? json = null, Boolean? tx_json = null)
         {
             List<String> parameters = new List<String>() { HASH_OR_HEIGH };
@@ -41,11 +46,14 @@ namespace mvs_rpc
         //////////////BLOCK END//////////////////////////////////////////////////////////////////////////////////
 
         //////////////ACCOUNT//////////////////////////////////////////////////////////////////////////////////
-        /*
-            :param: language(std::string): "Options are 'en', 'es', 'ja', 'zh_Hans', 'zh_Hant' and 'any', defaults to 'en'."
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-        */
+
+        /// <summary>
+        /// add account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="language">Options are 'en', 'es', 'ja', 'zh_Hans', 'zh_Hant' and 'any', defaults to 'en'.</param>
+        /// <returns>account detail</returns>
         public String getnewaccount(String ACCOUNTNAME, String ACCOUNTAUTH, String language = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -54,11 +62,13 @@ namespace mvs_rpc
             return getResult<String>("getnewaccount", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: number(std::uint32_t): "The number of addresses to be generated, defaults to 1."
-        */
+        /// <summary>
+        /// add new addresses 
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="number">The number of addresses to be generated, defaults to 1.</param>
+        /// <returns> new addresses list</returns>
         public String getnewaddress(String ACCOUNTNAME, String ACCOUNTAUTH, UInt32? number = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -67,10 +77,13 @@ namespace mvs_rpc
             return getResult<String>("getnewaddress", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-        */
+
+        /// <summary>
+        /// list addresses of account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <returns>all of address</returns>
         public String listaddresses(String ACCOUNTNAME, String ACCOUNTAUTH)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -79,9 +92,12 @@ namespace mvs_rpc
             return getResult<String>("listaddresses", parameters);
         }
 
-        /*
-            :param: PAYMENT_ADDRESS(std::string): "Valid payment address. "
-        */
+
+        /// <summary>
+        /// vaild address
+        /// </summary>
+        /// <param name="PAYMENT_ADDRESS">PAYMENT_ADDRESS(std::string): "Valid payment address.</param>
+        /// <returns></returns>
         public String validateaddress(String PAYMENT_ADDRESS)
         {
             List<String> parameters = new List<String>() { PAYMENT_ADDRESS };
@@ -89,13 +105,15 @@ namespace mvs_rpc
             return getResult<String>("validateaddress", parameters);
         }
 
-        /*
-            :param: WORD(list of string): "The set of words that that make up the mnemonic. If not specified the words are read from STDIN."
-            :param: language(explorer::config::language): "The language identifier of the dictionary of the mnemonic. Options are 'en', 'es', 'ja', 'zh_Hans', 'zh_Hant' and 'any', defaults to 'any'."
-            :param: accountname(std::string): Account name required.
-            :param: password(std::string): Account password(authorization) required.
-            :param: hd_index(std::uint32_t): "The HD index for the account."
-        */
+        /// <summary>
+        /// import account from mnemonic
+        /// </summary>
+        /// <param name="WORD">The set of words that that make up the mnemonic</param>
+        /// <param name="accountname">Account name required.</param>
+        /// <param name="password">Account password(authorization) required.</param>
+        /// <param name="language">The language identifier of the dictionary of the mnemonic. Options are 'en', 'es', 'ja', 'zh_Hans', 'zh_Hant' and 'any', defaults to 'any'.</param>
+        /// <param name="hd_index">The HD index for the account.</param>
+        /// <returns></returns>
         public String importaccount(String WORD, String accountname, String password, String language = null, UInt32? hd_index = null)
         {
             List<String> parameters = new List<String>() { WORD, "--accountname", accountname.ToString(), "--password", password.ToString() };
@@ -106,12 +124,14 @@ namespace mvs_rpc
             return getResult<String>("importaccount", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: FILE(string of file path): "key file path."
-            :param: FILECONTENT(std::string): "key file content. this will omit the FILE argument if specified."
-        */
+
+        /// <summary>
+        /// import account from keyfile
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="FILE">key file path.</param>
+        /// <returns></returns>
         public String importkeyfile(String ACCOUNTNAME, String ACCOUNTAUTH, String FILE)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FILE };
@@ -119,13 +139,16 @@ namespace mvs_rpc
             return getResult<String>("importkeyfile", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: LASTWORD(std::string): "The last word of your master private-key phrase."
-            :param: DESTINATION(string of file path): "The keyfile storage path to."
-            :param: data(bool): "If specified, the keyfile content will be append to the report, rather than to local file specified by DESTINATION."
-        */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="LASTWORD">The last word of your master private-key phrase.</param>
+        /// <param name="DESTINATION">The keyfile storage path to.</param>
+        /// <param name="data">If specified, the keyfile content will be append to the report, rather than to local file specified by DESTINATION.</param>
+        /// <returns></returns>
         public String dumpkeyfile(String ACCOUNTNAME, String ACCOUNTAUTH, String LASTWORD, String DESTINATION = null, Boolean? data = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, LASTWORD, DESTINATION };
@@ -134,11 +157,14 @@ namespace mvs_rpc
             return getResult<String>("dumpkeyfile", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: password(std::string): "The new password."
-        */
+
+        /// <summary>
+        /// change password of account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="password">The new password.</param>
+        /// <returns></returns>
         public String changepasswd(String ACCOUNTNAME, String ACCOUNTAUTH, String password)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, "--password", password.ToString() };
@@ -146,11 +172,14 @@ namespace mvs_rpc
             return getResult<String>("changepasswd", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: LASTWORD(std::string): "The last word of your private-key phrase."
-        */
+
+        /// <summary>
+        /// delete account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="LASTWORD">The last word of your private-key phrase.</param>
+        /// <returns></returns>
         public String deleteaccount(String ACCOUNTNAME, String ACCOUNTAUTH, String LASTWORD)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, LASTWORD };
@@ -158,11 +187,14 @@ namespace mvs_rpc
             return getResult<String>("deleteaccount", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: LASTWORD(std::string): "The last word of your backup words."
-        */
+
+        /// <summary>
+        /// get account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="LASTWORD">The last word of your backup words.</param>
+        /// <returns>account detail</returns>
         public String getaccount(String ACCOUNTNAME, String ACCOUNTAUTH, String LASTWORD)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, LASTWORD };
@@ -173,10 +205,13 @@ namespace mvs_rpc
         //////////////ACCOUNT END//////////////////////////////////////////////////////////////////////////////////
 
         //////////////BLOCKCHAIN//////////////////////////////////////////////////////////////////////////////////
-        /*
-            :param: ADMINNAME(std::string): "admin name."
-            :param: ADMINAUTH(std::string): "admin password/authorization."
-        */
+
+        /// <summary>
+        /// shutdown the service
+        /// </summary>
+        /// <param name="ADMINNAME">admin name.</param>
+        /// <param name="ADMINAUTH">admin password/authorization.</param>
+        /// <returns></returns>
         public String shutdown(String ADMINNAME = null, String ADMINAUTH = null)
         {
             List<String> parameters = new List<String>() { };
@@ -186,10 +221,13 @@ namespace mvs_rpc
             return getResult<String>("shutdown", parameters);
         }
 
-        /*
-            :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
-            :param: ADMINAUTH(std::string): Administrator password required.
-        */
+ 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ADMINNAME">Administrator required.</param>
+        /// <param name="ADMINAUTH">Administrator password required.</param>
+        /// <returns></returns>
         public String getinfo(String ADMINNAME = null, String ADMINAUTH = null)
         {
             List<String> parameters = new List<String>() { };
@@ -199,10 +237,13 @@ namespace mvs_rpc
             return getResult<String>("getinfo", parameters);
         }
 
-        /*
-            :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
-            :param: ADMINAUTH(std::string): Administrator password required.
-        */
+
+        /// <summary>
+        /// get block height
+        /// </summary>
+        /// <param name="ADMINNAME">Administrator required.</param>
+        /// <param name="ADMINAUTH">Administrator password required.</param>
+        /// <returns></returns>
         public String getheight(String ADMINNAME = null, String ADMINAUTH = null)
         {
             List<String> parameters = new List<String>() { };
@@ -213,10 +254,13 @@ namespace mvs_rpc
             return getResult<String>("getheight", parameters);
         }
 
-        /*
-            :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
-            :param: ADMINAUTH(std::string): Administrator password required.
-        */
+
+        /// <summary>
+        /// get connect peers info
+        /// </summary>
+        /// <param name="ADMINNAME">Administrator required.</param>
+        /// <param name="ADMINAUTH">Administrator password required.</param>
+        /// <returns>peer list</returns>
         public String getpeerinfo(String ADMINNAME = null, String ADMINAUTH = null)
         {
             List<String> parameters = new List<String>() { };
@@ -226,10 +270,13 @@ namespace mvs_rpc
             return getResult<String>("getpeerinfo", parameters);
         }
 
-        /*
-            :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
-            :param: ADMINAUTH(std::string): Administrator password required.
-        */
+
+        /// <summary>
+        /// get mining info of service
+        /// </summary>
+        /// <param name="ADMINNAME">Administrator required.</param>
+        /// <param name="ADMINAUTH">Administrator password required.</param>
+        /// <returns></returns>
         public String getmininginfo(String ADMINNAME = null, String ADMINAUTH = null)
         {
             List<String> parameters = new List<String>() { };
@@ -239,12 +286,14 @@ namespace mvs_rpc
             return getResult<String>("getmininginfo", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: address(std::string): "The mining target address. Defaults to empty, means a new address will be generated."
-            :param: number(uint16_t): "The number of mining blocks, useful for testing. Defaults to 0, means no limit."
-        */
+        /// <summary>
+        /// start mining
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="address">The mining target address. Defaults to empty, means a new address will be generated.</param>
+        /// <param name="number">The number of mining blocks, useful for testing. Defaults to 0, means no limit.</param>
+        /// <returns></returns>
         public String startmining(String ACCOUNTNAME, String ACCOUNTAUTH, String address = null, UInt16? number = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -254,10 +303,13 @@ namespace mvs_rpc
             return getResult<String>("startmining", parameters);
         }
 
-        /*
-            :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
-            :param: ADMINAUTH(std::string): Administrator password required.
-        */
+
+        /// <summary>
+        /// stopm ining
+        /// </summary>
+        /// <param name="ADMINNAME">Administrator required.(when administrator_required in mvs.conf is set true)</param>
+        /// <param name="ADMINAUTH">Administrator password required.</param>
+        /// <returns></returns>
         public String stopmining(String ADMINNAME = null, String ADMINAUTH = null)
         {
             List<String> parameters = new List<String>() { };
@@ -267,10 +319,12 @@ namespace mvs_rpc
             return getResult<String>("stopmining", parameters);
         }
 
-        /*
-            :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
-            :param: ADMINAUTH(std::string): Administrator password required.
-        */
+        /// <summary>
+        /// getwork
+        /// </summary>
+        /// <param name="ADMINNAME">Administrator required.(when administrator_required in mvs.conf is set true)</param>
+        /// <param name="ADMINAUTH">Administrator password required.</param>
+        /// <returns></returns>
         public String getwork(String ADMINNAME = null, String ADMINAUTH = null)
         {
             List<String> parameters = new List<String>() { };
@@ -280,12 +334,15 @@ namespace mvs_rpc
             return getResult<String>("getwork", parameters);
         }
 
-        /*
-            :param: NODEADDRESS(std::string): "The target node address[x.x.x.x:port]."
-            :param: ADMINNAME(std::string): "admin name."
-            :param: ADMINAUTH(std::string): "admin password/authorization."
-            :param: operation(std::string): "The operation[ add|ban ] to the target node address. default: add."
-        */
+
+        /// <summary>
+        /// add or ban node 
+        /// </summary>
+        /// <param name="NODEADDRESS">The target node address[x.x.x.x:port].</param>
+        /// <param name="ADMINNAME">admin name</param>
+        /// <param name="ADMINAUTH">admin password/authorization.</param>
+        /// <param name="operation">The operation[ add|ban ] to the target node address. default: add.</param>
+        /// <returns></returns>
         public String addnode(String NODEADDRESS, String ADMINNAME = null, String ADMINAUTH = null, String operation = null)
         {
             List<String> parameters = new List<String>() { NODEADDRESS };
@@ -297,11 +354,14 @@ namespace mvs_rpc
             return getResult<String>("addnode", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: PAYMENT_ADDRESS(string of Base58-encoded public key address): "the payment address of this account."
-        */
+
+        /// <summary>
+        /// set mining account and payment address
+        /// </summary>
+        /// <param name="ACCOUNTNAME"> Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="PAYMENT_ADDRESS">the payment address of this account.</param>
+        /// <returns></returns>
         public String setminingaccount(String ACCOUNTNAME, String ACCOUNTAUTH, String PAYMENT_ADDRESS)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, PAYMENT_ADDRESS };
@@ -310,11 +370,13 @@ namespace mvs_rpc
             return getResult<String>("setminingaccount", parameters);
         }
 
-        /*
-            :param: NONCE(std::string): "nonce. without leading 0x"
-            :param: HEADERHASH(std::string): "header hash. with leading 0x"
-            :param: MIXHASH(std::string): "mix hash. with leading 0x"
-        */
+        /// <summary>
+        /// submit work
+        /// </summary>
+        /// <param name="NONCE">nonce. without leading 0x</param>
+        /// <param name="HEADERHASH">header hash. with leading 0x</param>
+        /// <param name="MIXHASH">mix hash. with leading 0x</param>
+        /// <returns></returns>
         public String submitwork(String NONCE, String HEADERHASH, String MIXHASH)
         {
             List<String> parameters = new List<String>() { NONCE, HEADERHASH, MIXHASH };
@@ -323,11 +385,14 @@ namespace mvs_rpc
             return getResult<String>("submitwork", parameters);
         }
 
-        /*
-            :param: json(bool): "Json format or Raw format, default is Json(true)."
-            :param: ADMINNAME(std::string): Administrator required.(when administrator_required in mvs.conf is set true)
-            :param: ADMINAUTH(std::string): Administrator password required.
-        */
+
+        /// <summary>
+        /// get memorypool of transactions
+        /// </summary>
+        /// <param name="json">Json format or Raw format, default is Json(true).</param>
+        /// <param name="ADMINNAME">Administrator required.(when administrator_required in mvs.conf is set true)</param>
+        /// <param name="ADMINAUTH">Administrator password required.</param>
+        /// <returns>transactions list</returns>
         public String getmemorypool(Boolean? json = null, String ADMINNAME = null, String ADMINAUTH = null)
         {
             List<String> parameters = new List<String>() { };
@@ -341,10 +406,13 @@ namespace mvs_rpc
         //////////////BLOCKCHAIN END//////////////////////////////////////////////////////////////////////////////////
 
         //////////////ETP//////////////////////////////////////////////////////////////////////////////////
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-        */
+
+        /// <summary>
+        /// get balance of account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <returns></returns>
         public String getbalance(String ACCOUNTNAME, String ACCOUNTAUTH)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -352,13 +420,15 @@ namespace mvs_rpc
             return getResult<String>("getbalance", parameters);
         }
 
-        /*
-            :param: nozero(bool): "Defaults to false."
-            :param: greater_equal(uint64_t): "Greater than ETP bits."
-            :param: lesser_equal(uint64_t): "Lesser than ETP bits."
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-        */
+        /// <summary>
+        /// list balances under the account addresses 
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="nozero">Defaults to false.</param>
+        /// <param name="greater_equal">Greater than ETP bits.</param>
+        /// <param name="lesser_equal">Lesser than ETP bits.</param>
+        /// <returns></returns>
         public String listbalances(String ACCOUNTNAME, String ACCOUNTAUTH, Boolean? nozero = null, UInt64? greater_equal = null, UInt64? lesser_equal = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -368,9 +438,12 @@ namespace mvs_rpc
             return getResult<String>("listbalances", parameters);
         }
 
-        /*
-            :param: PAYMENT_ADDRESS(string of Base58-encoded public key address): "The payment address. If not specified the address is read from STDIN."
-        */
+
+        /// <summary>
+        /// get etp of the address
+        /// </summary>
+        /// <param name="PAYMENT_ADDRESS">The payment address. If not specified the address is read from STDIN.</param>
+        /// <returns></returns>
         public String getaddressetp(String PAYMENT_ADDRESS)
         {
             List<String> parameters = new List<String>() { PAYMENT_ADDRESS };
@@ -379,14 +452,17 @@ namespace mvs_rpc
             return getResult<String>("getaddressetp", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: AMOUNT(uint64_t): "ETP integer bits."
-            :param: address(std::string): "The deposit target address."
-            :param: deposit(uint16_t): "Deposits support [7, 30, 90, 182, 365] days. defaluts to 7 days"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+
+        /// <summary>
+        /// deposit etp under the account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="AMOUNT">ETP integer bits.</param>
+        /// <param name="address">The deposit target address.</param>
+        /// <param name="deposit">Deposits support [7, 30, 90, 182, 365] days. defaluts to 7 days</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns></returns>
         public String deposit(String ACCOUNTNAME, String ACCOUNTAUTH, UInt64 AMOUNT, String address = null, UInt16? deposit = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, AMOUNT.ToString() };
@@ -398,14 +474,16 @@ namespace mvs_rpc
         }
 
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TOADDRESS(std::string): "Send to this address"
-            :param: AMOUNT(uint64_t): "ETP integer bits."
-            :param: memo(std::string): "Attached memo for this transaction."
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 etp bits"
-        */
+        /// <summary>
+        /// send etp to address
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="TOADDRESS">Send to this address</param>
+        /// <param name="AMOUNT">"ETP integer bits.</param>
+        /// <param name="memo">Attached memo for this transaction.</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 etp bits</param>
+        /// <returns>transcation</returns>
         public String send(String ACCOUNTNAME, String ACCOUNTAUTH, String TOADDRESS, UInt64 AMOUNT, String memo = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TOADDRESS, AMOUNT.ToString() };
@@ -415,15 +493,18 @@ namespace mvs_rpc
             return getResult<String>("send", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: FROMADDRESS(std::string): "Send from this address"
-            :param: TOADDRESS(std::string): "Send to this address"
-            :param: AMOUNT(uint64_t): "ETP integer bits."
-            :param: memo(std::string): "The memo to descript transaction"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+
+        /// <summary>
+        /// send etp from address
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="FROMADDRESS">Send from this address</param>
+        /// <param name="TOADDRESS">Send to this address</param>
+        /// <param name="AMOUNT">ETP integer bits.</param>
+        /// <param name="memo">The memo to descript transaction</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transcation</returns>
         public String sendfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROMADDRESS, String TOADDRESS, UInt64 AMOUNT, String memo = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FROMADDRESS, TOADDRESS, AMOUNT.ToString() };
@@ -433,13 +514,15 @@ namespace mvs_rpc
             return getResult<String>("sendfrom", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: receivers(list of string): "Send to [address:etp_bits]."
-            :param: mychange(std::string): "Mychange to this address"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+        /// <summary>
+        /// Send etp to multiple addresses
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH"> Account password(authorization) required.</param>
+        /// <param name="receivers">Send to [address:etp_bits].</param>
+        /// <param name="mychange">Mychange to this address</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transcation</returns>
         public String sendmore(String ACCOUNTNAME, String ACCOUNTAUTH, List<String> receivers, String mychange = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -455,10 +538,13 @@ namespace mvs_rpc
         //////////////ETP END//////////////////////////////////////////////////////////////////////////////////
 
         //////////////TRANSCATION//////////////////////////////////////////////////////////////////////////////////
-        /*
-            :param: json(bool): "Json/Raw format, default is '--json=true'."
-            :param: HASH(string of hash256): "The Base16 transaction hash of the transaction to get. If not specified the transaction hash is read from STDIN."
-        */
+
+        /// <summary>
+        /// get transaction
+        /// </summary>
+        /// <param name="HASH">The Base16 transaction hash of the transaction to get.</param>
+        /// <param name="json">Json/Raw format, default is '--json=true'.</param>
+        /// <returns>transaction or rawtx</returns>
         public String gettx(String HASH, Boolean? json = null)
         {
             List<String> parameters = new List<String>() { HASH };
@@ -468,15 +554,18 @@ namespace mvs_rpc
             return getResult<String>("gettx", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: address(std::string): "Address."
-            :param: height(a range expressed by 2 integers): "Get tx according height eg: -e start-height:end-height will return tx between [start-height, end-height)"
-            :param: symbol(std::string): "Asset symbol."
-            :param: limit(uint64_t): "Transaction count per page."
-            :param: index(uint64_t): "Page index."
-        */
+
+        /// <summary>
+        /// list transcations
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="address">Address</param>
+        /// <param name="height">Get tx according height eg: -e start-height:end-height will return tx between [start-height, end-height)</param>
+        /// <param name="symbol">Asset symbol.</param>
+        /// <param name="limit">Transaction count per page.</param>
+        /// <param name="index">Page index.</param>
+        /// <returns>transcations</returns>
         public String listtxs(String ACCOUNTNAME, String ACCOUNTAUTH, String address = null, Tuple<UInt64, UInt64> height = null, String symbol = null, UInt64? limit = null, UInt64? index = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -491,16 +580,19 @@ namespace mvs_rpc
         //////////////TRANSCATION END//////////////////////////////////////////////////////////////////////////////////
 
         //////////////ASSET //////////////////////////////////////////////////////////////////////////////////
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: rate(int32_t): "The percent threshold value when you secondary issue.              0,  not allowed to secondary issue;              -1,  the asset can be secondary issue freely;             [1, 100], the asset can be secondary issue when own percentage greater than or equal to this value.             Defaults to 0."
-            :param: symbol(std::string): "The asset symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.), eg: CHENHAO.LAPTOP, dot separates prefix 'CHENHAO', It's impossible to create any asset named with 'CHENHAO' prefix, but this issuer."
-            :param: issuer(std::string): "Issue must be specified as a DID symbol."
-            :param: volume(non_negative_uint64): "The asset maximum supply volume, with unit of integer bits."
-            :param: decimalnumber(uint32_t): "The asset amount decimal number, defaults to 0."
-            :param: description(std::string): "The asset data chuck, defaults to empty string."
-        */
+
+        /// <summary>
+        /// create asset
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="symbol">The asset symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.), eg: CHENHAO.LAPTOP, dot separates prefix 'CHENHAO', It's impossible to create any asset named with 'CHENHAO' prefix, but this issuer.</param>
+        /// <param name="issuer">Issue must be specified as a DID symbol.</param>
+        /// <param name="volume">The asset maximum supply volume, with unit of integer bits.</param>
+        /// <param name="rate">The percent threshold value when you secondary issue.Defaults to 0. 0, not allowed to secondary issue;-1,  the asset can be secondary issue freely;[1, 100], the asset can be secondary issue when own percentage greater than or equal to this value.</param>
+        /// <param name="decimalnumber">The asset amount decimal number, defaults to 0.</param>
+        /// <param name="description">The asset data chuck, defaults to empty string.</param>
+        /// <returns></returns>
         public String createasset(String ACCOUNTNAME, String ACCOUNTAUTH, String symbol, String issuer, UInt64 volume, Int32? rate = null, UInt32? decimalnumber = null, String description = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, "--symbol", symbol.ToString(), "--issuer", issuer.ToString(), "--volume", volume.ToString() };
@@ -512,11 +604,14 @@ namespace mvs_rpc
         }
 
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: symbol(std::string): "The asset symbol/name. Global unique."
-        */
+
+        /// <summary>
+        /// delete local asset
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="symbol">The asset symbol/name. Global unique.</param>
+        /// <returns></returns>
         public String deletelocalasset(String ACCOUNTNAME, String ACCOUNTAUTH, String symbol)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, "--symbol", symbol.ToString() };
@@ -524,21 +619,24 @@ namespace mvs_rpc
             return getResult<String>("deletelocalasset", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: SYMBOL(std::string): "The asset symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.)"
-            :param: model(std::string): The token offering model by block height. 
-            TYPE=1 - fixed quantity model; TYPE=2 - specify parameters; 
-            LQ - Locked Quantity each period; 
-            LP - Locked Period, numeber of how many blocks; 
-            UN - Unlock Number, number of how many LPs; 
-            eg: 
-                TYPE=1;LQ=9000;LP=60000;UN=3  
-                TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
-            defaults to disable.
-            :param: fee(uint64_t): "The fee of tx. minimum is 10 etp."
-        */
+        /// <summary>
+        /// issue asset
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="SYMBOL">The asset symbol, global uniqueness, only supports UPPER-CASE alphabet and dot(.)</param>
+        /// <param name="model">The token offering model by block height. 
+        /// TYPE=1 - fixed quantity model; TYPE=2 - specify parameters; 
+        /// LQ - Locked Quantity each period;
+        /// LP - Locked Period, numeber of how many blocks;
+        /// UN - Unlock Number, number of how many LPs;
+        /// eg: 
+        ///         TYPE=1;LQ=9000;LP=60000;UN=3  
+        ///         TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
+        ///     defaults to disable.
+        /// </param>
+        /// <param name="fee">The fee of tx. minimum is 10 etp.</param>
+        /// <returns>transcation</returns>
         public String issue(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, SYMBOL };
@@ -549,11 +647,14 @@ namespace mvs_rpc
         }
 
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: SYMBOL(std::string): "Asset symbol."
-        */
+
+        /// <summary>
+        /// get assets under the account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="SYMBOL">Asset symbol.</param>
+        /// <returns>assets</returns>
         public String getaccountasset(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -563,11 +664,14 @@ namespace mvs_rpc
             return getResult<String>("getaccountasset", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: SYMBOL(std::string): "Asset symbol."
-        */
+
+        /// <summary>
+        /// get certs under the account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="SYMBOL">Cert symbol.</param>
+        /// <returns>certs</returns>
         public String getaccountcert(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, "--cert" };
@@ -577,9 +681,12 @@ namespace mvs_rpc
             return getResult<String>("getaccountasset", parameters);
         }
 
-        /*
-            :param: ADDRESS(std::string): "address"
-        */
+
+        /// <summary>
+        /// get assets under the address
+        /// </summary>
+        /// <param name="ADDRESS">address</param>
+        /// <returns>assets</returns>
         public String getaddressasset(String ADDRESS)
         {
             List<String> parameters = new List<String>() { ADDRESS };
@@ -587,9 +694,12 @@ namespace mvs_rpc
             return getResult<String>("getaddressasset", parameters);
         }
 
-        /*
-            :param: ADDRESS(std::string): "address"
-        */
+
+        /// <summary>
+        /// get certs under the address
+        /// </summary>
+        /// <param name="ADDRESS">address</param>
+        /// <returns>certs</returns>
         public String getaddresscert(String ADDRESS)
         {
             List<String> parameters = new List<String>() { ADDRESS, "--cert" };
@@ -598,9 +708,12 @@ namespace mvs_rpc
         }
 
 
-        /*
-            :param: SYMBOL(std::string): "Asset symbol. If not specified, will show whole network asset symbols."
-        */
+
+        /// <summary>
+        /// get asset by symbol
+        /// </summary>
+        /// <param name="SYMBOL">Asset symbol. If not specified, will show whole network asset symbols.</param>
+        /// <returns>assets</returns>
         public String getasset(String SYMBOL=null)
         {
             List<String> parameters = new List<String>() {  };
@@ -609,9 +722,12 @@ namespace mvs_rpc
 
             return getResult<String>("getasset", parameters);
         }
-        /*
-            :param: SYMBOL(std::string): "Asset symbol. If not specified, will show whole network asset symbols."
-        */
+ 
+        /// <summary>
+        /// get cert by symbol
+        /// </summary>
+        /// <param name="SYMBOL">Cert symbol. If not specified, will show whole network cert symbols.</param>
+        /// <returns>certs</returns>
         public String getcert(String SYMBOL=null)
         {
             List<String> parameters = new List<String>() { };
@@ -622,10 +738,13 @@ namespace mvs_rpc
             return getResult<String>("getasset", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-        */
+
+        /// <summary>
+        /// list assets under the account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <returns>assets</returns>
         public String listassets(String ACCOUNTNAME = null, String ACCOUNTAUTH = null)
         {
             List<String> parameters = new List<String>() { };
@@ -635,10 +754,13 @@ namespace mvs_rpc
             return getResult<String>("listassets", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-        */
+
+        /// <summary>
+        /// list certs under the account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <returns>certs</returns>
         public String listcerts(String ACCOUNTNAME = null, String ACCOUNTAUTH = null)
         {
             List<String> parameters = new List<String>() { };
@@ -649,25 +771,27 @@ namespace mvs_rpc
             return getResult<String>("listassets", parameters);
         }
 
-
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: FROMADDRESS(std::string): "From address"
-            :param: TOADDRESS(std::string): "Target address"
-            :param: SYMBOL(std::string): "Asset symbol"
-            :param: AMOUNT(uint64_t): "Asset integer bits. see asset <decimal_number>."
-            :param: model(std::string): The token offering model by block height. 
-            TYPE=1 - fixed quantity model; TYPE=2 - specify parameters; 
-            LQ - Locked Quantity each period; 
-            LP - Locked Period, numeber of how many blocks; 
-            UN - Unlock Number, number of how many LPs; 
-            eg: 
-                TYPE=1;LQ=9000;LP=60000;UN=3  
-                TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
-            defaults to disable.
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+        /// <summary>
+        /// send asset from address 
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="FROMADDRESS">From address</param>
+        /// <param name="TOADDRESS">Target address</param>
+        /// <param name="SYMBOL">Asset symbol</param>
+        /// <param name="AMOUNT">Asset integer bits. see asset <decimal_number>.</param>
+        /// <param name="model">The token offering model by block height. 
+        /// TYPE=1 - fixed quantity model; TYPE=2 - specify parameters;
+        /// LQ - Locked Quantity each period;
+        /// LP - Locked Period, numeber of how many blocks;
+        /// UN - Unlock Number, number of how many LPs;
+        /// eg: 
+        ///         TYPE=1;LQ=9000;LP=60000;UN=3  
+        ///         TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
+        ///     defaults to disable.
+        /// </param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transaction</returns>
         public String sendassetfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROMADDRESS, String TOADDRESS, String SYMBOL, UInt64 AMOUNT, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FROMADDRESS, TOADDRESS, SYMBOL, AMOUNT.ToString() };
@@ -677,23 +801,27 @@ namespace mvs_rpc
             return getResult<String>("sendassetfrom", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: ADDRESS(std::string): "Asset receiver."
-            :param: SYMBOL(std::string): "Asset symbol/name."
-            :param: AMOUNT(uint64_t): "Asset integer bits. see asset <decimal_number>."
-            :param: model(std::string): The token offering model by block height. 
-            TYPE=1 - fixed quantity model; TYPE=2 - specify parameters; 
-            LQ - Locked Quantity each period; 
-            LP - Locked Period, numeber of how many blocks; 
-            UN - Unlock Number, number of how many LPs; 
-            eg: 
-                TYPE=1;LQ=9000;LP=60000;UN=3  
-                TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
-            defaults to disable.
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+
+        /// <summary>
+        /// send asset 
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="ADDRESS">From address</param>
+        /// <param name="SYMBOL">Asset symbol</param>
+        /// <param name="AMOUNT">Asset integer bits. see asset <decimal_number>.</param>
+        /// <param name="model">The token offering model by block height. 
+        /// TYPE=1 - fixed quantity model; TYPE=2 - specify parameters;
+        /// LQ - Locked Quantity each period;
+        /// LP - Locked Period, numeber of how many blocks;
+        /// UN - Unlock Number, number of how many LPs;
+        /// eg: 
+        ///         TYPE=1;LQ=9000;LP=60000;UN=3  
+        ///         TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
+        ///     defaults to disable.
+        /// </param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transaction</returns>
         public String sendasset(String ACCOUNTNAME, String ACCOUNTAUTH, String ADDRESS, String SYMBOL, UInt64 AMOUNT, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, ADDRESS, SYMBOL, AMOUNT.ToString() };
@@ -703,23 +831,26 @@ namespace mvs_rpc
             return getResult<String>("sendasset", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TODID(std::string): "target did to check and issue asset, fee from and mychange to the address of this did too."
-            :param: SYMBOL(std::string): "issued asset symbol"
-            :param: VOLUME(uint64_t): "The volume of asset, with unit of integer bits."
-            :param: model(std::string): The token offering model by block height. 
-            TYPE=1 - fixed quantity model; TYPE=2 - specify parameters; 
-            LQ - Locked Quantity each period; 
-            LP - Locked Period, numeber of how many blocks; 
-            UN - Unlock Number, number of how many LPs; 
-            eg: 
-                TYPE=1;LQ=9000;LP=60000;UN=3  
-                TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
-            defaults to disable.
-            :param: fee(uint64_t): "The fee of tx. default_value 10000 ETP bits"
-        */
+        /// <summary>
+        /// secondary issue asset
+        /// </summary>
+        /// <param name="ACCOUNTNAME"> Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="TODID">target did to check and issue asset, fee from and mychange to the address of this did too.</param>
+        /// <param name="SYMBOL">issued asset symbol</param>
+        /// <param name="VOLUME">The volume of asset, with unit of integer bits.</param>
+        /// <param name="model">The token offering model by block height.
+        /// TYPE=1 - fixed quantity model; TYPE=2 - specify parameters; 
+        /// LQ - Locked Quantity each period;
+        /// LP - Locked Period, numeber of how many blocks;
+        /// UN - Unlock Number, number of how many LPs;
+        /// eg: 
+        ///         TYPE=1;LQ=9000;LP=60000;UN=3  
+        ///         TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
+        ///     defaults to disable.
+        /// </param>
+        /// <param name="fee">The fee of tx. default_value 10000 ETP bits</param>
+        /// <returns>transaction</returns>
         public String secondaryissue(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, UInt64 VOLUME, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL, VOLUME.ToString() };
@@ -730,14 +861,16 @@ namespace mvs_rpc
         }
 
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TODID(std::string): "The DID will own this cert."
-            :param: SYMBOL(std::string): "Asset Cert Symbol/Name."
-            :param: CERT(std::string): "Asset cert type name can be: ISSUE: cert of issuing asset, generated by issuing asset and used in secondaryissue asset.  DOMAIN: cert of domain, generated by issuing asset, the symbol is same as asset symbol(if it does not contain dot) or the prefix part(that before the first dot) of asset symbol. NAMING: cert of naming right of domain. The owner of domain cert can issue this type of cert by issuecert with symbol like “domain.XYZ”(domain is the symbol of domain cert)."
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+        /// <summary>
+        /// issue cert
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="TODID">The DID will own this cert.</param>
+        /// <param name="SYMBOL">Asset Cert Symbol/Name.</param>
+        /// <param name="CERT">Asset cert type name can be: ISSUE: cert of issuing asset, generated by issuing asset and used in secondaryissue asset.  DOMAIN: cert of domain, generated by issuing asset, the symbol is same as asset symbol(if it does not contain dot) or the prefix part(that before the first dot) of asset symbol. NAMING: cert of naming right of domain. The owner of domain cert can issue this type of cert by issuecert with symbol like “domain.XYZ”(domain is the symbol of domain cert).</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transaction</returns>
         public String issuecert(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, String CERT, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL, CERT };
@@ -747,14 +880,16 @@ namespace mvs_rpc
         }
 
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TODID(std::string): "Target did"
-            :param: SYMBOL(std::string): "Asset cert symbol"
-            :param: CERT(std::string): "Asset cert type name. eg. ISSUE, DOMAIN or NAMING"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+        /// <summary>
+        /// transfer cert to did
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="TODID">Target did</param>
+        /// <param name="SYMBOL">Asset cert symbol</param>
+        /// <param name="CERT">Asset cert type name. eg. ISSUE, DOMAIN or NAMING</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transaction</returns>
         public String transfercert(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, String CERT, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL, CERT };
@@ -764,12 +899,14 @@ namespace mvs_rpc
         }
 
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: SYMBOL(std::string): "The asset will be burned."
-            :param: AMOUNT(uint64_t): "Asset integer bits. see asset <decimal_number>."
-        */
+        /// <summary>
+        /// burn asset
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="SYMBOL">The asset will be burned</param>
+        /// <param name="AMOUNT">Asset integer bits. see asset <decimal_number>.</param>
+        /// <returns>transaction</returns>
         public String burn(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL, UInt64 AMOUNT)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, SYMBOL, AMOUNT.ToString() };
@@ -782,16 +919,19 @@ namespace mvs_rpc
 
 
         //////////////MULTISIGNATURE //////////////////////////////////////////////////////////////////////////////////
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: FROMADDRESS(std::string): "Send from this address, must be a multi-signature script address."
-            :param: TOADDRESS(std::string): "Send to this address"
-            :param: AMOUNT(uint64_t): "ETP integer bits."
-            :param: symbol(std::string): "asset name, not specify this option for etp tx"
-            :param: type_(uint16_t): "Transaction type, defaults to 0. 0 -- transfer etp, 3 -- transfer asset"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+
+        /// <summary>
+        /// create multisignature transaction
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="FROMADDRESS">Send from this address, must be a multi-signature script address.</param>
+        /// <param name="TOADDRESS">Send to this address</param>
+        /// <param name="AMOUNT">ETP integer bits.</param>
+        /// <param name="symbol">asset name, not specify this option for etp tx</param>
+        /// <param name="type_">Transaction type, defaults to 0. 0 -- transfer etp, 3 -- transfer asset</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>raw transaction</returns>
         public String createmultisigtx(String ACCOUNTNAME, String ACCOUNTAUTH, String FROMADDRESS, String TOADDRESS, UInt64 AMOUNT, String symbol = null, UInt16? type_ = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FROMADDRESS, TOADDRESS, AMOUNT.ToString() };
@@ -802,11 +942,14 @@ namespace mvs_rpc
             return getResult<String>("createmultisigtx", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: ADDRESS(std::string): "Address."
-        */
+
+        /// <summary>
+        /// get public key of address
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="ADDRESS">Address.</param>
+        /// <returns>public key</returns>
         public String getpublickey(String ACCOUNTNAME, String ACCOUNTAUTH, String ADDRESS)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, ADDRESS };
@@ -815,13 +958,16 @@ namespace mvs_rpc
             return getResult<String>("getpublickey", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TRANSACTION(string of hexcode): "The input Base16 transaction to sign."
-            :param: selfpublickey(std::string): "The private key of this public key will be used to sign."
-            :param: broadcast(bool): "Broadcast the tx if it is fullly signed, disabled by default."
-        */
+
+        /// <summary>
+        /// sign multisignature transaction
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH"> Account password(authorization) required.</param>
+        /// <param name="TRANSACTION">The input Base16 transaction to sign.</param>
+        /// <param name="selfpublickey">The private key of this public key will be used to sign.</param>
+        /// <param name="broadcast">Broadcast the tx if it is fullly signed, disabled by default.</param>
+        /// <returns>raw transaction</returns>
         public String signmultisigtx(String ACCOUNTNAME, String ACCOUNTAUTH, String TRANSACTION, String selfpublickey = null, Boolean? broadcast = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TRANSACTION };
@@ -830,11 +976,14 @@ namespace mvs_rpc
             return getResult<String>("signmultisigtx", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: ADDRESS(std::string): "The multisig script corresponding address."
-        */
+
+        /// <summary>
+        /// delete multisignature address
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="ADDRESS">The multisig script corresponding address.</param>
+        /// <returns></returns>
         public String deletemultisig(String ACCOUNTNAME, String ACCOUNTAUTH, String ADDRESS)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, ADDRESS };
@@ -843,11 +992,12 @@ namespace mvs_rpc
             return getResult<String>("deletemultisig", parameters);
         }
 
-
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-        */
+        /// <summary>
+        /// list multisignature address under the account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <returns>multisignature addresses</returns>
         public String listmultisig(String ACCOUNTNAME, String ACCOUNTAUTH)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -855,15 +1005,18 @@ namespace mvs_rpc
             return getResult<String>("listmultisig", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: signaturenum(uint16_t): "Account multisig signature number."
-            :param: publickeynum(uint16_t): "Account multisig public key number."
-            :param: selfpublickey(std::string): "the public key belongs to this account."
-            :param: publickey(list of string): "cosigner public key used for multisig"
-            :param: description(std::string): "multisig record description."
-        */
+
+        /// <summary>
+        /// create multisignature address
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="signaturenum">Account multisig signature number.</param>
+        /// <param name="publickeynum">Account multisig public key number.</param>
+        /// <param name="selfpublickey">the public key belongs to this account.</param>
+        /// <param name="publickey">cosigner public key used for multisig</param>
+        /// <param name="description">multisig record description.</param>
+        /// <returns>new multisignature address</returns>
         public String getnewmultisig(String ACCOUNTNAME, String ACCOUNTAUTH, UInt16 signaturenum, UInt16 publickeynum, String selfpublickey, List<String> publickey, String description = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -882,16 +1035,19 @@ namespace mvs_rpc
         //////////////MULTISIGNATURE END//////////////////////////////////////////////////////////////////////////////////
 
         //////////////RAWTX//////////////////////////////////////////////////////////////////////////////////
-        /*
-            :param: type_(uint16_t): "Transaction type. 0 -- transfer etp, 1 -- deposit etp, 3 -- transfer asset"
-            :param: senders(list of string): "Send from addresses"
-            :param: receivers(list of string): "Send to [address:amount]. amount is asset number if sybol option specified"
-            :param: symbol(std::string): "asset name, not specify this option for etp tx"
-            :param: deposit(uint16_t): "Deposits support [7, 30, 90, 182, 365] days. defaluts to 7 days"
-            :param: mychange(std::string): "Mychange to this address, includes etp and asset change"
-            :param: message(std::string): "Message/Information attached to this transaction"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+
+        /// <summary>
+        /// create raw transaction
+        /// </summary>
+        /// <param name="type_">Transaction type. 0 -- transfer etp, 1 -- deposit etp, 3 -- transfer asset</param>
+        /// <param name="senders">Send from addresses</param>
+        /// <param name="receivers">Send to [address:amount]. amount is asset number if sybol option specified</param>
+        /// <param name="symbol">asset name, not specify this option for etp tx</param>
+        /// <param name="deposit">Deposits support [7, 30, 90, 182, 365] days. defaluts to 7 days</param>
+        /// <param name="mychange">Mychange to this address, includes etp and asset change</param>
+        /// <param name="message">Message/Information attached to this transaction</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>raw transaction</returns>
         public String createrawtx(UInt16 type_, List<String> senders, List<String> receivers, String symbol = null, UInt16? deposit = null, String mychange = null, String message = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { "--type", type_.ToString() };
@@ -910,10 +1066,13 @@ namespace mvs_rpc
             return getResult<String>("createrawtx", parameters);
         }
 
-        /*
-            :param: TRANSACTION(string of hexcode): "The input Base16 transaction to broadcast."
-            :param: fee(uint64_t): "The max tx fee. default_value 10 etp"
-        */
+
+        /// <summary>
+        /// send raw transaction
+        /// </summary>
+        /// <param name="TRANSACTION">The input Base16 transaction to broadcast.</param>
+        /// <param name="fee">The max tx fee. default_value 10 etp</param>
+        /// <returns>raw transaction</returns>
         public String sendrawtx(String TRANSACTION, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { TRANSACTION };
@@ -922,11 +1081,13 @@ namespace mvs_rpc
             return getResult<String>("sendrawtx", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TRANSACTION(string of hexcode): "The input Base16 transaction to sign."
-        */
+        /// <summary>
+        /// sign raw transaction
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="TRANSACTION">The input Base16 transaction to sign.</param>
+        /// <returns>raw transaction</returns>
         public String signrawtx(String ACCOUNTNAME, String ACCOUNTAUTH, String TRANSACTION)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TRANSACTION };
@@ -936,9 +1097,11 @@ namespace mvs_rpc
         }
 
 
-        /*
-            :param: TRANSACTION(string of hexcode): "The input Base16 transaction to sign."
-        */
+        /// <summary>
+        /// decode raw transaction
+        /// </summary>
+        /// <param name="TRANSACTION">The input Base16 transaction to sign.</param>
+        /// <returns>transaction</returns>
         public String decoderawtx(String TRANSACTION)
         {
             List<String> parameters = new List<String>() { TRANSACTION };
@@ -950,13 +1113,16 @@ namespace mvs_rpc
         //////////////RAWTX END//////////////////////////////////////////////////////////////////////////////////
 
         //////////////DID//////////////////////////////////////////////////////////////////////////////////
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: ADDRESS(std::string): "The address will be bound to, can change to other addresses later."
-            :param: SYMBOL(std::string): "The symbol of global unique MVS Digital Identity Destination/Index, supports alphabets/numbers/(“@”, “.”, “_”, “-“), case-sensitive, maximum length is 64."
-            :param: fee(uint64_t): "The fee of tx. defaults to 1 etp."
-        */
+
+        /// <summary>
+        /// register did
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="ADDRESS">The address will be bound to, can change to other addresses later.</param>
+        /// <param name="SYMBOL">The symbol of global unique MVS Digital Identity Destination/Index, supports alphabets/numbers/(“@”, “.”, “_”, “-“), case-sensitive, maximum length is 64.</param>
+        /// <param name="fee">The fee of tx. defaults to 1 etp.</param>
+        /// <returns>transaction</returns>
         public String registerdid(String ACCOUNTNAME, String ACCOUNTAUTH, String ADDRESS, String SYMBOL, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, ADDRESS, SYMBOL };
@@ -965,13 +1131,15 @@ namespace mvs_rpc
             return getResult<String>("registerdid", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TOADDRESS(std::string): "Target address"
-            :param: DIDSYMBOL(std::string): "Did symbol"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+        /// <summary>
+        /// did change address
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="TOADDRESS">Target address</param>
+        /// <param name="DIDSYMBOL">Did symbol</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transaction</returns>
         public String didchangeaddress(String ACCOUNTNAME, String ACCOUNTAUTH, String TOADDRESS, String DIDSYMBOL, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TOADDRESS, DIDSYMBOL };
@@ -980,24 +1148,26 @@ namespace mvs_rpc
             return getResult<String>("didchangeaddress", parameters);
         }
 
-
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TO_(std::string): "Asset receiver did/address."
-            :param: ASSET(std::string): "Asset MST symbol."
-            :param: AMOUNT(uint64_t): "Asset integer bits. see asset <decimal_number>."
-            :param: model(std::string): The token offering model by block height. 
-            TYPE=1 - fixed quantity model; TYPE=2 - specify parameters; 
-            LQ - Locked Quantity each period; 
-            LP - Locked Period, numeber of how many blocks; 
-            UN - Unlock Number, number of how many LPs; 
-            eg: 
-                TYPE=1;LQ=9000;LP=60000;UN=3  
-                TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
-            defaults to disable.
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+        /// <summary>
+        /// send asset to address\did
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="TO_">Asset receiver did/address.</param>
+        /// <param name="ASSET">Asset MST symbol.</param>
+        /// <param name="AMOUNT">Asset integer bits. see asset <decimal_number>.</param>
+        /// <param name="model">The token offering model by block height. 
+        /// TYPE=1 - fixed quantity model; TYPE=2 - specify parameters;
+        /// LQ - Locked Quantity each period;
+        /// LP - Locked Period, numeber of how many blocks;
+        /// UN - Unlock Number, number of how many LPs;
+        /// eg: 
+        ///         TYPE=1;LQ=9000;LP=60000;UN=3  
+        ///         TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
+        ///     defaults to disable.
+        ///     </param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transaction</returns>
         public String didsendasset(String ACCOUNTNAME, String ACCOUNTAUTH, String TO_, String ASSET, UInt64 AMOUNT, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TO_, ASSET, AMOUNT.ToString() };
@@ -1007,57 +1177,27 @@ namespace mvs_rpc
             return getResult<String>("didsendasset", parameters);
         }
 
-
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-        */
-        public String listdids(String ACCOUNTNAME = null, String ACCOUNTAUTH = null)
-        {
-            List<String> parameters = new List<String>() { };
-            if (ACCOUNTNAME != null && ACCOUNTAUTH != null)
-                parameters.AddRange( new List<String> { ACCOUNTNAME, ACCOUNTAUTH });
-
-            return getResult<String>("listdids", parameters);
-        }
-
-
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TO_(std::string): "Send to this did/address"
-            :param: AMOUNT(uint64_t): "ETP integer bits."
-            :param: memo(std::string): "Attached memo for this transaction."
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 etp bits"
-        */
-        public String didsend(String ACCOUNTNAME, String ACCOUNTAUTH, String TO_, UInt64 AMOUNT, String memo = null, UInt64? fee = null)
-        {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TO_, AMOUNT.ToString() };
-
-            if (memo != null) parameters.AddRange(new List<String> { "--memo", memo.ToString() });
-            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<String>("didsend", parameters);
-        }
-
-
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: FROM_(std::string): "From did/address"
-            :param: TO_(std::string): "Target did/address"
-            :param: SYMBOL(std::string): "Asset symbol"
-            :param: AMOUNT(uint64_t): "Asset integer bits. see asset <decimal_number>."
-            :param: model(std::string): The token offering model by block height. 
-            TYPE=1 - fixed quantity model; TYPE=2 - specify parameters; 
-            LQ - Locked Quantity each period; 
-            LP - Locked Period, numeber of how many blocks; 
-            UN - Unlock Number, number of how many LPs; 
-            eg: 
-                TYPE=1;LQ=9000;LP=60000;UN=3  
-                TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
-            defaults to disable.
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+        /// <summary>
+        /// send asset from address\did
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="FROM_">From did/address</param>
+        /// <param name="TO_">Target did/address</param>
+        /// <param name="SYMBOL">Asset MST symbol.</param>
+        /// <param name="AMOUNT">Asset integer bits. see asset <decimal_number>.</param>
+        /// <param name="model">The token offering model by block height. 
+        /// TYPE=1 - fixed quantity model; TYPE=2 - specify parameters;
+        /// LQ - Locked Quantity each period;
+        /// LP - Locked Period, numeber of how many blocks;
+        /// UN - Unlock Number, number of how many LPs;
+        /// eg: 
+        ///         TYPE=1;LQ=9000;LP=60000;UN=3  
+        ///         TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
+        ///     defaults to disable.
+        ///     </param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transaction</returns>
         public String didsendassetfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROM_, String TO_, String SYMBOL, UInt64 AMOUNT, String model = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FROM_, TO_, SYMBOL, AMOUNT.ToString() };
@@ -1067,15 +1207,51 @@ namespace mvs_rpc
             return getResult<String>("didsendassetfrom", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: FROM_(std::string): "Send from this did/address"
-            :param: TO_(std::string): "Send to this did/address"
-            :param: AMOUNT(uint64_t): "ETP integer bits."
-            :param: memo(std::string): "The memo to descript transaction"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+        /// <summary>
+        /// list dids under the account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <returns></returns>
+        public String listdids(String ACCOUNTNAME = null, String ACCOUNTAUTH = null)
+        {
+            List<String> parameters = new List<String>() { };
+            if (ACCOUNTNAME != null && ACCOUNTAUTH != null)
+                parameters.AddRange( new List<String> { ACCOUNTNAME, ACCOUNTAUTH });
+
+            return getResult<String>("listdids", parameters);
+        }
+
+        /// <summary>
+        /// send etp to address or did
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="TO_">Send to this did/address</param>
+        /// <param name="AMOUNT">ETP integer bits.</param>
+        /// <param name="memo">Attached memo for this transaction.</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 etp bits</param>
+        /// <returns>transaction</returns>
+        public String didsend(String ACCOUNTNAME, String ACCOUNTAUTH, String TO_, UInt64 AMOUNT, String memo = null, UInt64? fee = null)
+        {
+            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TO_, AMOUNT.ToString() };
+
+            if (memo != null) parameters.AddRange(new List<String> { "--memo", memo.ToString() });
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("didsend", parameters);
+        }
+
+        /// <summary>
+        /// send  etp from address/did
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="FROM_">Send from this did/address</param>
+        /// <param name="TO_">Send to this did/address</param>
+        /// <param name="AMOUNT">ETP integer bits.</param>
+        /// <param name="memo">Attached memo for this transaction.</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 etp bits</param>
+        /// <returns>transaction</returns>
         public String didsendfrom(String ACCOUNTNAME, String ACCOUNTAUTH, String FROM_, String TO_, UInt64 AMOUNT, String memo = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, FROM_, TO_, AMOUNT.ToString() };
@@ -1085,13 +1261,16 @@ namespace mvs_rpc
             return getResult<String>("didsendfrom", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: receivers(list of string): "Send to [did/address:etp_bits]."
-            :param: mychange(std::string): "Mychange to this did/address"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+
+        /// <summary>
+        /// send etp to multiple address/did
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="receivers">Send to [did/address:etp_bits].</param>
+        /// <param name="mychange">Mychange to this did/address</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transaction</returns>
         public String didsendmore(String ACCOUNTNAME, String ACCOUNTAUTH, List<String> receivers, String mychange = null, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH };
@@ -1104,9 +1283,11 @@ namespace mvs_rpc
             return getResult<String>("didsendmore", parameters);
         }
 
-        /*
-            :param: DidOrAddress(std::string): "Did symbol or standard address, if DidOrAddress == null display whole network DIDs."
-        */
+        /// <summary>
+        /// get did history addresses from did or address
+        /// </summary>
+        /// <param name="didOrAddress">Did symbol or standard address, if DidOrAddress == null display whole network DIDs.</param>
+        /// <returns>history addresses or dids</returns>
         public String getdid(String didOrAddress=null)
         {
             List<String> parameters = new List<String>() { };
@@ -1119,13 +1300,41 @@ namespace mvs_rpc
         //////////////DID END//////////////////////////////////////////////////////////////////////////////////
 
         //////////////MIT//////////////////////////////////////////////////////////////////////////////////
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TODID(std::string): "Target did"
-            :param: SYMBOL(std::string): "Asset MIT symbol"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
+
+        /// <summary>
+        /// register mit 
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="TODID">Target did</param>
+        /// <param name="SYMBOL">MIT symbol</param>
+        /// <param name="content">Content of MIT</param>
+        /// <param name="mits">List of symbol and content pair. Symbol and content are separated by a ':'</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transaction</returns>
+        public String registermit(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, String content = null, List<String> mits = null, UInt64? fee = null)
+        {
+            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL };
+
+            if (content != null) parameters.AddRange(new List<String> { "--content", content.ToString() });
+
+            if (mits != null)
+                foreach (var i in mits)
+                    parameters.AddRange(new List<String> { "--mits", i.ToString() });
+
+            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
+            return getResult<String>("registermit", parameters);
+        }
+
+        /// <summary>
+        /// transfer mit to did
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <param name="TODID">Target did</param>
+        /// <param name="SYMBOL">Asset MIT symbol</param>
+        /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
+        /// <returns>transaction</returns>
         public String transfermit(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, UInt64? fee = null)
         {
             List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL };
@@ -1134,13 +1343,16 @@ namespace mvs_rpc
             return getResult<String>("transfermit", parameters);
         }
 
-        /*
-            :param: SYMBOL(std::string): "Asset symbol. If not specified then show whole network MIT symbols."
-            :param: trace(bool): "If specified then trace the history. Default is not specified."
-            :param: limit(uint32_t): "MIT count per page."
-            :param: index(uint32_t): "Page index."
-            :param: current(bool): "If specified then show the lastest information of specified MIT. Default is not specified."
-        */
+
+        /// <summary>
+        /// get mits
+        /// </summary>
+        /// <param name="SYMBOL">Asset symbol. If not specified then show whole network MIT symbols.</param>
+        /// <param name="trace">If specified then trace the history. Default is not specified.</param>
+        /// <param name="limit">MIT count per page.</param>
+        /// <param name="index">Page index.</param>
+        /// <param name="current">If specified then show the lastest information of specified MIT. Default is not specified.</param>
+        /// <returns>mits</returns>
         public String getmit(String SYMBOL = null, Boolean? trace = null, UInt32? limit = null, UInt32? index = null, Boolean? current = null)
         {
             List<String> parameters = new List<String>() { SYMBOL };
@@ -1151,33 +1363,13 @@ namespace mvs_rpc
             return getResult<String>("getmit", parameters);
         }
 
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-            :param: TODID(std::string): "Target did"
-            :param: SYMBOL(std::string): "MIT symbol"
-            :param: content(std::string): "Content of MIT"
-            :param: mits(list of string): "List of symbol and content pair. Symbol and content are separated by a ':'"
-            :param: fee(uint64_t): "Transaction fee. defaults to 10000 ETP bits"
-        */
-        public String registermit(String ACCOUNTNAME, String ACCOUNTAUTH, String TODID, String SYMBOL, String content = null, List<String> mits = null, UInt64? fee = null)
-        {
-            List<String> parameters = new List<String>() { ACCOUNTNAME, ACCOUNTAUTH, TODID, SYMBOL };
 
-            if (content != null) parameters.AddRange(new List<String> { "--content", content.ToString() });
-
-            if(mits != null)
-                foreach (var i in mits)
-                    parameters.AddRange(new List<String> { "--mits", i.ToString() });
-
-            if (fee != null) parameters.AddRange(new List<String> { "--fee", fee.ToString() });
-            return getResult<String>("registermit", parameters);
-        }
-
-        /*
-            :param: ACCOUNTNAME(std::string): Account name required.
-            :param: ACCOUNTAUTH(std::string): Account password(authorization) required.
-        */
+        /// <summary>
+        /// list mits under the account
+        /// </summary>
+        /// <param name="ACCOUNTNAME">Account name required.</param>
+        /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
+        /// <returns></returns>
         public String listmits(String ACCOUNTNAME = null, String ACCOUNTAUTH = null)
         {
             List<String> parameters = new List<String>() { };

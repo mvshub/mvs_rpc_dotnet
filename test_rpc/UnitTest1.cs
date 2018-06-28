@@ -12,7 +12,7 @@ namespace test_rpc
     [TestClass]
     public class UnitTest1
     {
-        String url = "http://10.10.10.159:8820";
+        String url = "http://127.0.0.1:8820";
 
         [TestMethod]
         public void test_mit()
