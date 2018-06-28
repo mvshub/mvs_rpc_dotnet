@@ -779,7 +779,7 @@ namespace mvs_rpc
         /// <param name="FROMADDRESS">From address</param>
         /// <param name="TOADDRESS">Target address</param>
         /// <param name="SYMBOL">Asset symbol</param>
-        /// <param name="AMOUNT">Asset integer bits. see asset <decimal_number>.</param>
+        /// <param name="AMOUNT">Asset integer bits. see asset decimal_number</param>
         /// <param name="model">The token offering model by block height. 
         /// TYPE=1 - fixed quantity model; TYPE=2 - specify parameters;
         /// LQ - Locked Quantity each period;
@@ -809,7 +809,7 @@ namespace mvs_rpc
         /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
         /// <param name="ADDRESS">From address</param>
         /// <param name="SYMBOL">Asset symbol</param>
-        /// <param name="AMOUNT">Asset integer bits. see asset <decimal_number>.</param>
+        /// <param name="AMOUNT">Asset integer bits. see asset decimal_number</param>
         /// <param name="model">The token offering model by block height. 
         /// TYPE=1 - fixed quantity model; TYPE=2 - specify parameters;
         /// LQ - Locked Quantity each period;
@@ -905,7 +905,7 @@ namespace mvs_rpc
         /// <param name="ACCOUNTNAME">Account name required.</param>
         /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
         /// <param name="SYMBOL">The asset will be burned</param>
-        /// <param name="AMOUNT">Asset integer bits. see asset <decimal_number>.</param>
+        /// <param name="AMOUNT">Asset integer bits. see asset decimal_number</param>
         /// <returns>transaction</returns>
         public String burn(String ACCOUNTNAME, String ACCOUNTAUTH, String SYMBOL, UInt64 AMOUNT)
         {
@@ -1155,7 +1155,7 @@ namespace mvs_rpc
         /// <param name="ACCOUNTAUTH">Account password(authorization) required.</param>
         /// <param name="TO_">Asset receiver did/address.</param>
         /// <param name="ASSET">Asset MST symbol.</param>
-        /// <param name="AMOUNT">Asset integer bits. see asset <decimal_number>.</param>
+        /// <param name="AMOUNT">Asset integer bits. see asset decimal_number </param>
         /// <param name="model">The token offering model by block height. 
         /// TYPE=1 - fixed quantity model; TYPE=2 - specify parameters;
         /// LQ - Locked Quantity each period;
@@ -1165,7 +1165,7 @@ namespace mvs_rpc
         ///         TYPE=1;LQ=9000;LP=60000;UN=3  
         ///         TYPE=2;LQ=9000;LP=60000;UN=3;UC=20000,20000,20000;UQ=3000,3000,3000 
         ///     defaults to disable.
-        ///     </param>
+        /// </param>
         /// <param name="fee">Transaction fee. defaults to 10000 ETP bits</param>
         /// <returns>transaction</returns>
         public String didsendasset(String ACCOUNTNAME, String ACCOUNTAUTH, String TO_, String ASSET, UInt64 AMOUNT, String model = null, UInt64? fee = null)
@@ -1185,7 +1185,7 @@ namespace mvs_rpc
         /// <param name="FROM_">From did/address</param>
         /// <param name="TO_">Target did/address</param>
         /// <param name="SYMBOL">Asset MST symbol.</param>
-        /// <param name="AMOUNT">Asset integer bits. see asset <decimal_number>.</param>
+        /// <param name="AMOUNT">Asset integer bits. see asset decimal_number </param>
         /// <param name="model">The token offering model by block height. 
         /// TYPE=1 - fixed quantity model; TYPE=2 - specify parameters;
         /// LQ - Locked Quantity each period;

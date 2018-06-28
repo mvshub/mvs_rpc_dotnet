@@ -15,12 +15,22 @@ namespace mvs_rpc
 {
     public partial class RPC
     {
+        /// <summary>
+        /// Construct function
+        /// </summary>
+        /// <param name="url">remote url,default localhost:8820</param>
+        /// <param name="version">rpc version,default v3</param>
         public RPC(String url= "http://127.0.0.1:8820", rpcversion version = rpcversion.v3)
         {
             url_ = url;
             version_ = version;
         }
 
+        /// <summary>
+        /// help
+        /// </summary>
+        /// <param name="method">rpc function</param>
+        /// <returns>help string</returns>
         public String help(String method=null)
         {
             if(method == null)
@@ -29,6 +39,11 @@ namespace mvs_rpc
             return getResult<String>(method, new List<string> { "--help"});
             
         }
+        /// <summary>
+        /// test rpc
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public String test_rpc(List<String> parameters)
         {
             if (parameters != null && parameters.Count > 0)
