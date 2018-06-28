@@ -14,9 +14,9 @@ The user must be familiar with the [metaverse jsonrpc interface](https://docs.mv
 Thie project is available for [NuGet packages](https://www.nuget.org/packages/mvs_rpc/)
 
 ### Compile the Source
-git clone https://github.com/mvshub/mvs_rpc_dotnet.git
-compile the mvs_rpc_dotnet.sln
-add the reference mvs_rpc.dll in your project
+* git clone https://github.com/mvshub/mvs_rpc_dotnet.git
+* compile the mvs_rpc_dotnet.sln
+* add the reference mvs_rpc.dll in your project
 
 ## How to use
 
